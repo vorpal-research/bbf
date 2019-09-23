@@ -1,0 +1,20 @@
+#Ignore folders
+/.idea
+/archLogs
+/dist
+/lib
+/META-INF
+/logs
+/reduKtor/logs
+/target
+/reduKtor/target
+/reduKtor/logs
+/backend-bugfinder/logs
+/backend-bugfinder/target
+/trash
+*.iml
+/bcomparatorgui/target/
+/kootstrap/.idea/
+/kootstrap/README
+/kootstrap/pom.xml.orig
+/kootstrap/target/
