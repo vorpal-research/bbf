@@ -1,0 +1,4 @@
+
+fun 
+() =
+UnsupportedOperationException().getOrElse

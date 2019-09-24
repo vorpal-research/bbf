@@ -1,0 +1,3 @@
+class kotlin {
+ object Int
+}

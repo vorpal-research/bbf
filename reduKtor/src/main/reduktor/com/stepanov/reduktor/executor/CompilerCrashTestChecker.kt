@@ -250,8 +250,6 @@ class CommonCompilerCrashTestChecker(private val backend: CommonBackend) : Compi
         psiFactory?.let { this.psiFactory = it }
         this.compilingPath = compilingPath
         val status = backend.tryToCompile(compilingPath)
-        println("St = ${status.hasException}")
-        System.exit(0)
         require(status.hasException) { "File has not contains bug for current version of kotlin compiler" }
         errs = status.combinedOutput
 //        if (CompilerArgs.isCompilerError)

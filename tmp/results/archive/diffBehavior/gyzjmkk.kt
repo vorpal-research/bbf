@@ -1,0 +1,27 @@
+// IGNORE_BACKEND: JS_IR
+// TODO: muted automatically, investigate should it be ran for JS or not
+// DONT_RUN_GENERATED_CODE: JS
+
+tailrec fun <T, A> Iterator<T>.foldl(acc : A, foldFunction : (e : T, acc : A) -> A) : A =
+        if (!hasNext()) {
+println("THEN");
+acc
+}
+        else {
+println("ELSE");
+foldl(foldFunction(next(), acc), foldFunction)!!
+}
+
+fun box() : String {
+    val sum = (1..1000000).iterator().foldl(0) { e : Int, acc : Long ->
+        acc + e
+    }!!
+
+    return if (sum == 500000500000) {
+println("THEN");
+"OK"
+} else {
+println("ELSE");
+"FAIL: $sum"!!
+}
+}

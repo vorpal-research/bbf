@@ -32,26 +32,26 @@ class DuplicatesFilterTest {
 //                    .joinToString("\n")
 //
 //
-//    @Test
-//    fun test() {
-//        val compiler = JVMCompiler()
-//        val file = File("/home/stepanov/Kotlin/backend-bugfinder/tmp/results/jvmCompilerErrors/getterInClass.kt")
-//        val dir = File("/home/stepanov/Kotlin/testProjects/CompilerCrushingTests/compTestsForReducing").listFiles().filter { it.absolutePath.endsWith(".kt") }.toList()
-//        //val msg1 = comp.getErrorMessage(file.absolutePath)
-//        for (i in 0 until dir.size) {
-//            val msg2 = compiler.getErrorMessage(dir[i].absolutePath)
-//            val type = Error(msg2).type
-//            println("TYPE = ${type}")
-//            if (type == ErrorType.UNKNOWN)
-//                println("MSG = $msg2")
-//            println("COMPARE ${dir[i].name} and ${file.name}")
-//            println(dir[i].readText().contains("operator fun"))
-//            println("WITHOUT STACKTRACES = ${simpleIsSameErrs(dir[i].absolutePath, file.absolutePath, compiler)}")
-//            println("WITH STACKTRACES = ${simpleIsSameErrsWithStacktraces(dir[i].absolutePath, file.absolutePath, compiler)}\n\n\n")
-//        }
-//        //checkByPaths("tmp/results/jvmCompilerErrors/niljb.kt", "tmp/results/jvmCompilerErrors/niljb.kt", CompilerType.JVM, true)
-//        //checkByPaths("tmp/results/jvmCompilerErrors/menvd.kt", "tmp/results/jvmCompilerErrors/ciiik.kt", CompilerType.JVM, true)
-//    }
-//
+@Test
+fun test() {
+    val compiler = JVMCompiler("-Xuse-ir")
+    val file = File("/home/stepanov/Kotlin/bbf/tmp/results/JVM-Xuse-ir/ydicj.kt")
+    val dir = File("/home/stepanov/Kotlin/bbf/tmp/results/JVM-Xuse-ir").listFiles().filter { it.absolutePath.endsWith(".kt") }.toList()
+    //val msg1 = comp.getErrorMessage(file.absolutePath)
+    for (i in 0 until dir.size) {
+        val msg2 = compiler.getErrorMessage(dir[i].absolutePath)
+        val type = Error(msg2).type
+        println("TYPE = ${type}")
+        if (type == ErrorType.UNKNOWN)
+            println("MSG = $msg2")
+        println("COMPARE ${dir[i].name} and ${file.name}")
+        println(dir[i].readText().contains("operator fun"))
+        println("WITHOUT STACKTRACES = ${simpleIsSameErrs(dir[i].absolutePath, file.absolutePath, compiler)}")
+        println("WITH STACKTRACES = ${simpleIsSameErrsWithStacktraces(dir[i].absolutePath, file.absolutePath, compiler)}\n\n\n")
+    }
+    //checkByPaths("tmp/results/jvmCompilerErrors/niljb.kt", "tmp/results/jvmCompilerErrors/niljb.kt", CompilerType.JVM, true)
+    //checkByPaths("tmp/results/jvmCompilerErrors/menvd.kt", "tmp/results/jvmCompilerErrors/ciiik.kt", CompilerType.JVM, true)
+}
+
 
 }

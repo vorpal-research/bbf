@@ -1,0 +1,4 @@
+fun 
+(): IllegalStateException {
+box = return
+}

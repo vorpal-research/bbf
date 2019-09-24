@@ -54,19 +54,15 @@ object FilterDuplcatesCompilerErrors {
     }
 
     fun simpleIsSameErrs(path1: String, path2: String, compiler: CommonCompiler): Boolean {
-        println("path1 = $path1")
-        println("path2 = $path2")
         val text = File(path1).readText()
         val errorMsg = compiler.getErrorMessageForText(text)
         val errorMsgForFile = compiler.getErrorMessage(path2)
-        println("msg1 = ${errorMsg}")
-        println("\n\n______________________________________\n\n")
-        println("msg2 = ${errorMsgForFile}")
         val k = newCheckErrsMatching(errorMsg, errorMsgForFile)
-        println("K = $k")
-        log.debug("Comparing $path1 $path2 $k")
-        System.exit(0)
-        return k > 0.49
+        val kStacktraces = newCheckErrsMatching(getStacktrace2(errorMsg), getStacktrace2(errorMsgForFile))
+        log.debug("Comparing $path1 $path2 $k stacks: $kStacktraces")
+        if (k > 0.49 || kStacktraces == 0.5)
+            log.debug("$path1 and $path2 are duplicates!!!")
+        return k > 0.49 || kStacktraces == 0.5
     }
 
     fun simpleIsSameErrsWithStacktraces(path1: String, path2: String, compiler: CommonCompiler): Boolean {
@@ -81,16 +77,14 @@ object FilterDuplcatesCompilerErrors {
         return k > 0.49
     }
 
-    fun getK(path1: String, path2: String, comp: CommonCompiler, directlyErrMsg: Boolean): Double {
+    fun getK(path1: String, path2: String, comp: CommonCompiler): Pair<Double, Double> {
         val text = File(path1).readText()
 
         val errorMsg = comp.getErrorMessageForText(text)
         val errorMsgForFile = comp.getErrorMessage(path2)
 
-        return if (directlyErrMsg)
-            newCheckErrsMatching(errorMsg, errorMsgForFile)
-        else
-            newCheckErrsMatching(getStacktrace2(errorMsg), getStacktrace2(errorMsgForFile))
+        return newCheckErrsMatching(errorMsg, errorMsgForFile) to
+                newCheckErrsMatching(getStacktrace2(errorMsg), getStacktrace2(errorMsgForFile))
     }
 
     fun haveDuplicatesErrors(path: String, dir: String, compiler: CommonCompiler): Boolean =

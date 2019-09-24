@@ -94,7 +94,7 @@ object MutationChecker {
     }
 
     private fun saveCompilerBug(path: String, compiler: CommonCompiler) {
-        log.debug("Trying to save ${compiler.compilerInfo} compiler bug")
+        log.debug("Trying to save ${compiler.compilerInfo} compiler bug\n Text: ${File(path).readText()}")
         val dir = compiler.compilerInfo.filter { it != ' ' }
 //        val dir = "jvmCompilerErrors"
 //        val dir = when (compiler) {
@@ -132,7 +132,7 @@ object MutationChecker {
             log.debug("Found duplicates")
         } else {
             File(newPath).writeText(oldText)
-            BugManager.saveBug(compiler.compilerInfo, compiler.getErrorMessage(newPath), oldText)
+            BugManager.saveBug(compiler.compilerInfo, compiler.getErrorMessage(newPath), oldText, shouldDump = true)
         }
     }
 

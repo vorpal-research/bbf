@@ -29,15 +29,6 @@ class BugFinder(private val path: String) : Runnable {
         try {
             ++counter
             log.debug("Name = $path")
-            val text = File(path).readText()
-//            val forInit = PSICreator("").getPSIForFile(path, false)
-//            Transformation.file = forInit
-//            MutationChecker.factory = KtPsiFactory(forInit.project)
-//            MutationChecker.checkTextCompiling(forInit.text)
-//            System.exit(0)
-            //if (text.contains("assert")) return
-            //if (text.contains("IGNORE_BACKEND") || text.contains("TARGET_BACKEND") || text.contains("package")) return
-
             val psiCreator = PSICreator("")
             val psiFile =
                     try {

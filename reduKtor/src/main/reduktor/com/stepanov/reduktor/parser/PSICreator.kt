@@ -28,7 +28,6 @@ import org.jetbrains.kotlin.resolve.BindingContext
 import java.io.File
 
 
-
 class PSICreator(var projectDir: String) {
 
     fun getPSI(): List<KtFile> {
@@ -171,13 +170,18 @@ class PSICreator(var projectDir: String) {
 //        }
         val file = targetFiles.first()
         val configuration = env.configuration.copy()
+
         configuration.put(JSConfigurationKeys.LIBRARIES, JsConfig.JS_STDLIB)
-        configuration.put(CommonConfigurationKeys.MODULE_NAME, "sample")
+        //configuration.put(CommonConfigurationKeys.MODULE_NAME, "sample")
 
         if (generateCtx)
             ctx = TopDownAnalyzerFacadeForJS.analyzeFiles(listOf(file), JsConfig(env.project, configuration)).bindingContext
 
         return targetFiles.first()
+    }
+
+    companion object {
+        const val compilerVersionConst = "1.3.51"
     }
 
 

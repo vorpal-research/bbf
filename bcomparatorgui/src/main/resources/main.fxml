@@ -20,6 +20,7 @@
             <ScrollPane fx:id="scrollPane2" layoutX="12.0" layoutY="60.0" prefHeight="710.0" prefWidth="563.0">
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
             </ScrollPane>
+            <Label fx:id="label2" layoutX="375.0" layoutY="29.0" text="Kstack = " />
         </AnchorPane>
     </SplitPane>
 </AnchorPane>

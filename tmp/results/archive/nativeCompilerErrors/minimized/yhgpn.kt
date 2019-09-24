@@ -1,0 +1,2 @@
+
+fun result() = (A)?::foo

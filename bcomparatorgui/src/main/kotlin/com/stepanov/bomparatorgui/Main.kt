@@ -1,11 +1,10 @@
 package com.stepanov.bomparatorgui
 
+import com.stepanov.bbf.executor.compilers.JSCompiler
 import com.stepanov.bbf.executor.compilers.JVMCompiler
 import javafx.application.Application
-import javafx.event.ActionEvent
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader.load
-import javafx.scene.Node
 import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.control.Button
@@ -33,6 +32,9 @@ class Main : Application() {
     lateinit var label1: Label
 
     @FXML
+    lateinit var label2: Label
+
+    @FXML
     lateinit var myButton: Button
 
     @FXML
@@ -50,8 +52,8 @@ class Main : Application() {
     }
 
 
-    fun buttonClicked(actionEvent: ActionEvent) {
-        val k = BugComparator(area1.text, area2.text, JVMCompiler()).compare()
+    fun buttonClicked() {
+        val k = BugComparator(area1.text, area2.text, JVMCompiler("")).compare()
         val result = k.first ?: return
         val textsForTextFlow1 = result
                 .filter { it.operation != DiffMatchPatch.Operation.INSERT && it.text.trim() != "\n" }
@@ -72,13 +74,14 @@ class Main : Application() {
         p2.children.addAll(textsForTextFlow2)
         scrollPane2.content = p2
         //textFlow2.children.addAll(textsForTextFlow2)
-        label1.text = "K = ${k.second}"
+        label1.text = "K = ${k.second.first}"
+        label2.text = "Kstack = ${k.second.second}"
     }
 
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
-            Application.launch(Main::class.java)
+            launch(Main::class.java)
         }
     }
 }

@@ -1,0 +1,3 @@
+fun ()  {
+"Unexpected exception: $:: anlateinitclass"()
+}

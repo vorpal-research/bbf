@@ -28,7 +28,7 @@ class JSCompiler(private val arguments: String = "") : CommonCompiler() {
     }
 
     override fun isCompilerBug(pathToFile: String) =
-            tryToCompile(pathToFile).combinedOutput.contains("Exception:", true)
+            tryToCompile(pathToFile).hasException
 
     override fun tryToCompile(pathToFile: String): KotlincInvokeStatus {
         val tmpPath = "/tmp/tmp.js"

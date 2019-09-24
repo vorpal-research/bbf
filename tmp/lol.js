@@ -5,23 +5,78 @@ if (typeof kotlin === 'undefined') {
 }
 var lol = function (_, Kotlin) {
   'use strict';
-  var ArrayList_init = Kotlin.kotlin.collections.ArrayList_init_287e2$;
+  var ensureNotNull = Kotlin.ensureNotNull;
+  var Kind_CLASS = Kotlin.Kind.CLASS;
+  var equals = Kotlin.equals;
   var println = Kotlin.kotlin.io.println_s8jyv4$;
+  var log;
+  function A(Array_0) {
+    this.Array = Array_0;
+  }
+  A.prototype.plus_61zpoe$ = function (i) {
+    return ensureNotNull(new A(-1));
+  };
+  A.prototype.toString = function () {
+    var res = '';
+    return res;
+  };
+  A.$metadata$ = {
+    kind: Kind_CLASS,
+    simpleName: 'A',
+    interfaces: []
+  };
   function box() {
-    var l = ArrayList_init();
-    l.add_11rb$(true);
-    var x = !l.get_za3lpa$(-2117618646);
-    if (x) {
+    var tmp$;
+    return (tmp$ = null != null ? null : null) != null ? tmp$ : 'OK';
+  }
+  function x() {
+    var array = ensureNotNull([43, ensureNotNull('fail 2')]);
+    array[foo()] = 'O';
+    if (!equals(array[1], 0)) {
       println('THEN');
-      return 'Fail: ' + x + '}';
+      return 'hij#klm#1';
     }
-    return 'bniwh';
+    if (!equals(array[1], 0)) {
+      println('THEN');
+      'OK';
+    }
+    Kotlin.compareTo(log, ensureNotNull('-1')) < 0;
+    var objArray = ensureNotNull(['OK', new A(0)]);
+    !equals(objArray[1], ensureNotNull(new A(0)));
+    if (!equals(log, 'O')) {
+      println('THEN');
+      ensureNotNull(0);
+    }
+    if (0 === 10) {
+      println('THEN');
+      'OK';
+    }
+    if (!equals(objArray[2], new A(1))) {
+      println('THEN');
+      return 'OK';
+    }
+    return 'OK';
+  }
+  function foo() {
+    log += 'OK';
+    return 2;
   }
   function main(args) {
     println(box());
   }
+  Object.defineProperty(_, 'log', {
+    get: function () {
+      return log;
+    },
+    set: function (value) {
+      log = value;
+    }
+  });
   _.box = box;
+  _.x = x;
+  _.foo = foo;
   _.main_kand9s$ = main;
+  log = ensureNotNull('');
   main([]);
   Kotlin.defineModule('lol', _);
   return _;

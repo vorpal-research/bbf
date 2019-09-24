@@ -85,7 +85,6 @@ class TransformationManager(private val ktFiles: List<KtFile>) {
     fun doTransformationsForFile(file: KtFile, checker: CompilerTestChecker,
                                  isProject: Boolean = false, projectDir: String = ""): KtFile {
         log.debug("FILE NAME = ${file.name}")
-        println("NAME = ${file.name}")
         file.beforeAstChange()
         val pathToSave = StringBuilder(file.name)
         pathToSave.insert(pathToSave.indexOfLast { it == '/' }, "/minimized")
