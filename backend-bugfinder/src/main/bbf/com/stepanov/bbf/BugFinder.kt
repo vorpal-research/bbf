@@ -70,13 +70,14 @@ class BugFinder(private val path: String) : Runnable {
             val mutatedFile = PSICreator("").getPSIForText(psiFile.text)
             val tracer = Tracer(mutatedFile, psiCreator.ctx)
             val traced = tracer.trace()
-            log.debug("Traced = ${traced}")
+            log.debug("Traced = ${traced.text}")
             if (!compilers.checkCompilingForAllBackends(traced)) {
                 log.debug("Could not compile after tracing $path")
                 log.debug(traced.text)
             }
 
             val res = TracesChecker(compilers).checkTest(traced.text)
+            log.debug("Result = $res")
             if (res) {
                 val pathToSaveRes = CompilerArgs.resultsDir + "diffBehavior/${Random().getRandomVariableName(7)}.kt"
                 File(pathToSaveRes).writeText(traced.text)
@@ -85,7 +86,9 @@ class BugFinder(private val path: String) : Runnable {
             return
         } catch (e: Error) {
             println("ERROR: $e")
-            System.exit(0)
+            log.debug("ERROR: $e")
+            return
+            //System.exit(0)
         }
     }
 

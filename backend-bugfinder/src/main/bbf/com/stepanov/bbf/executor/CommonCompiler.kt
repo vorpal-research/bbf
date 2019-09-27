@@ -7,9 +7,12 @@ import org.jetbrains.kotlin.psi.KtFile
 import com.stepanov.bbf.util.Stream
 import com.stepanov.bbf.util.readStream
 import com.stepanov.reduktor.executor.KotlincInvokeStatus
+import org.apache.commons.exec.*
 import java.io.BufferedWriter
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileWriter
+import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
 enum class CompilerType {
@@ -26,7 +29,8 @@ abstract class CommonCompiler {
     abstract fun tryToCompile(pathToFile: String): KotlincInvokeStatus
     abstract fun isCompilerBug(pathToFile: String): Boolean
     abstract val compilerInfo: String
-    abstract fun exec(path: String): String
+    abstract val pathToCompiled: String
+    abstract fun exec(path: String, streamType: Stream = Stream.INPUT): String
 
 
     fun compile(file: KtFile): CompilingResult = compile(file.name)
@@ -66,28 +70,25 @@ abstract class CommonCompiler {
         }
     }
 
-//    fun exec(path: String, type: CompilerType, streamType: Stream = Stream.INPUT): String {
-//        val proc = when (type) {
-//            CompilerType.JVM -> ProcessBuilder("/bin/bash", "-c", "java -jar $path").start()
-//            CompilerType.JS -> ProcessBuilder("/bin/bash", "-c", "node $path").start()
-//            CompilerType.NATIVE -> ProcessBuilder("/bin/bash", "-c", path).start()
-//        }
-//        try {
-//
-//            val a = proc.waitFor(5L, TimeUnit.SECONDS)
-//            if (!a) {
-//                while (proc.isAlive) proc.destroyForcibly()
-//                return ""
-//            }
-//        } catch (e: IllegalThreadStateException) {
-//            println("exit value = ${proc.exitValue()}")
-//        }
-//        val result = proc.readStream(streamType)
-////        val error = proc.readStream(Stream.ERROR)
-////        println(error)
-//        while (proc.isAlive) proc.destroyForcibly()
-//        return result
-//    }
+    fun commonExec(command: String, streamType: Stream = Stream.INPUT): String {
+        val cmdLine = CommandLine.parse(command)
+        val outputStream = ByteArrayOutputStream()
+        val errorStream = ByteArrayOutputStream()
+        val executor = DefaultExecutor().also {
+            it.watchdog = ExecuteWatchdog(5 * 1000)
+            it.streamHandler = PumpStreamHandler(outputStream, errorStream)
+        }
+        try {
+            executor.execute(cmdLine)
+        } catch (e: ExecuteException) {
+            executor.watchdog.destroyProcess()
+        }
+        return when (streamType) {
+            Stream.INPUT -> outputStream.toString()
+            Stream.ERROR -> errorStream.toString()
+            Stream.BOTH -> "OUTPUTSTREAM:\n$outputStream ERRORSTREAM:\n$errorStream"
+        }
+    }
 
     override fun toString(): String = compilerInfo
 }

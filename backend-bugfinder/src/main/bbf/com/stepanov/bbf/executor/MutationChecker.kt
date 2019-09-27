@@ -42,13 +42,11 @@ object MutationChecker {
             val tmpPath = CompilerArgs.pathToTmpFile
             File(tmpPath).writeText(text)
 
-            //flag is compiler bug
-            var isCompilerBug = false
             //Checking for compiler bug and if bug, then save
             compilers.forEach { compiler ->
                 if (compiler.isCompilerBug(tmpPath)) {
+                    log.debug("Found ${compiler.compilerInfo} BUG:\n Text:\n ${File(tmpPath).readText()}")
                     saveCompilerBug(tmpPath, compiler)
-                    isCompilerBug = true
                 }
             }
 //            if (jvmComp.isCompilerBug(tmpPath)) {

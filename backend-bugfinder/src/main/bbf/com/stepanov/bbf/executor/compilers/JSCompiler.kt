@@ -20,6 +20,9 @@ class JSCompiler(private val arguments: String = "") : CommonCompiler() {
     override val compilerInfo: String
         get() = "JS $arguments"
 
+    override val pathToCompiled: String
+        get() = "tmp/tmp.js"
+
     override fun getErrorMessage(pathToFile: String): String = tryToCompile(pathToFile).combinedOutput
 
     override fun checkCompiling(pathToFile: String): Boolean {
@@ -64,22 +67,23 @@ class JSCompiler(private val arguments: String = "") : CommonCompiler() {
         return status
     }
 
-    //super.exec(path, CompilerType.JS, Stream.INPUT)
-    override fun exec(path: String): String {
-        val proc = ProcessBuilder("/bin/bash", "-c", "node $path").start()
-        try {
-            val a = proc.waitFor(5L, TimeUnit.SECONDS)
-            if (!a) {
-                while (proc.isAlive) proc.destroyForcibly()
-                return ""
-            }
-        } catch (e: IllegalThreadStateException) {
-            println("exit value = ${proc.exitValue()}")
-        }
-        val result = proc.readStream(Stream.INPUT)
-        while (proc.isAlive) proc.destroyForcibly()
-        return result
-    }
+    override fun exec(path: String, streamType: Stream): String = commonExec("node $path", streamType)
+//    //super.exec(path, CompilerType.JS, Stream.INPUT)
+//    override fun exec(path: String): String {
+//        val proc = ProcessBuilder("/bin/bash", "-c", "node $path").start()
+//        try {
+//            val a = proc.waitFor(5L, TimeUnit.SECONDS)
+//            if (!a) {
+//                while (proc.isAlive) proc.destroyForcibly()
+//                return ""
+//            }
+//        } catch (e: IllegalThreadStateException) {
+//            println("exit value = ${proc.exitValue()}")
+//        }
+//        val result = proc.readStream(Stream.INPUT)
+//        while (proc.isAlive) proc.destroyForcibly()
+//        return result
+//    }
 
 //    override fun compile(path: String): CompilingResult {
 //        val resultFilePath = "/home/stepanov/Kotlin/testProjects/backendBugsTests/lol.js"
@@ -125,14 +129,13 @@ class JSCompiler(private val arguments: String = "") : CommonCompiler() {
 //    }
 
     override fun compile(path: String): CompilingResult {
-        val newPath = "tmp/lol.js"
         val proc =
                 if (arguments.isEmpty())
                     Runtime.getRuntime().exec("${CompilerArgs.pathToKotlincJS} $path " +
-                            "-libraries ${CompilerArgs.pathToJsKotlinLib} -output $newPath\n")
+                            "-libraries ${CompilerArgs.pathToJsKotlinLib} -output $pathToCompiled\n")
                 else
                     Runtime.getRuntime().exec("${CompilerArgs.pathToKotlincJS} $path " +
-                            "$arguments -libraries ${CompilerArgs.pathToJsKotlinLib} -output $newPath\n")
+                            "$arguments -libraries ${CompilerArgs.pathToJsKotlinLib} -output $pathToCompiled\n")
         try {
             while (proc.waitFor() != 0) {
             }
@@ -147,13 +150,13 @@ class JSCompiler(private val arguments: String = "") : CommonCompiler() {
         val isSuccess = analyzeErrorMessage(status)
         //println("success = $isSuccess")
         return if (isSuccess) {
-            val oldStr = FileReader(File(newPath)).readText()
+            val oldStr = FileReader(File(pathToCompiled)).readText()
             val newStr = "const kotlin = require(\"${CompilerArgs.pathToJsKotlinLib}/kotlin.js\");\n\n$oldStr"
-            val fw = FileWriter(newPath, false)
+            val fw = FileWriter(pathToCompiled, false)
             val bw = BufferedWriter(fw)
             bw.write(newStr)
             bw.close()
-            CompilingResult(0, newPath)
+            CompilingResult(0, pathToCompiled)
         } else {
             CompilingResult(-1, "")
         }

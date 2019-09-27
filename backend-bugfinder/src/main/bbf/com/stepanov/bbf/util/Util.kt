@@ -14,9 +14,10 @@ import org.jetbrains.kotlin.resolve.bindingContextUtil.getAbbreviatedTypeOrType
 import org.jetbrains.kotlin.types.KotlinType
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.io.SequenceInputStream
 
 enum class Stream {
-    INPUT, ERROR
+    INPUT, ERROR, BOTH
 }
 
 fun Process.readStream(type: Stream): String {
@@ -24,6 +25,7 @@ fun Process.readStream(type: Stream): String {
     val reader = when (type) {
         Stream.INPUT -> BufferedReader(InputStreamReader(this.inputStream))
         Stream.ERROR -> BufferedReader(InputStreamReader(this.errorStream))
+        else -> BufferedReader(InputStreamReader(SequenceInputStream(this.inputStream, this.errorStream)))
     }
     if (!reader.ready()) return ""
     var line: String? = reader.readLine()
@@ -74,4 +76,4 @@ fun KtNamedFunction.initBodyByValue(psiFactory: KtPsiFactory, value: String) {
 fun PsiElement.find(el: PsiElement): PsiElement? = this.node.getAllChildrenNodes().find { it.psi == el }?.psi
 
 fun List<CommonCompiler>.checkCompilingForAllBackends(psiFile: PsiFile): Boolean =
-        this.map { it.checkCompilingText(psiFile.text) }.toSet().size == 1
+        this.map { it.checkCompilingText(psiFile.text) }.any { !it }

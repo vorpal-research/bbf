@@ -13,6 +13,11 @@ import com.stepanov.reduktor.executor.KotlincInvokeStatus
 import com.stepanov.reduktor.executor.error.ErrorType
 import com.stepanov.reduktor.executor.error.Error
 import com.stepanov.reduktor.util.MsgCollector
+import org.apache.commons.exec.CommandLine
+import org.apache.commons.exec.DefaultExecutor
+import org.apache.commons.exec.ExecuteException
+import org.apache.commons.exec.ExecuteWatchdog
+import java.lang.Exception
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -20,6 +25,9 @@ import java.util.concurrent.TimeoutException
 class JVMCompiler(private val arguments: String = "") : CommonCompiler() {
     override val compilerInfo: String
         get() = "JVM $arguments"
+
+    override val pathToCompiled: String
+        get() = "tmp/tmp.jar"
 
 
     override fun checkCompiling(pathToFile: String): Boolean {
@@ -34,13 +42,13 @@ class JVMCompiler(private val arguments: String = "") : CommonCompiler() {
 
 
     override fun compile(path: String): CompilingResult {
+        println("PATH = $path")
         val kotlinc = CompilerArgs.pathToKotlinc
-        val newPath = "tmp/lol.jar"
         val proc =
                 if (arguments.isEmpty())
-                    Runtime.getRuntime().exec("$kotlinc $path -include-runtime -d $newPath")
+                    Runtime.getRuntime().exec("$kotlinc $path -include-runtime -d $pathToCompiled")
                 else
-                    Runtime.getRuntime().exec("$kotlinc $path -include-runtime $arguments -d $newPath")
+                    Runtime.getRuntime().exec("$kotlinc $path -include-runtime $arguments -d $pathToCompiled")
         try {
             val a = proc.waitFor(5L, TimeUnit.SECONDS)
             if (!a) {
@@ -53,7 +61,7 @@ class JVMCompiler(private val arguments: String = "") : CommonCompiler() {
         //println("JVM Error = $status")
         //proc.destroy()
         while (proc.isAlive) proc.destroyForcibly()
-        return if (analyzeErrorMessage(status)) CompilingResult(0, newPath) else CompilingResult(-1, "")
+        return if (analyzeErrorMessage(status)) CompilingResult(0, pathToCompiled) else CompilingResult(-1, "")
     }
 
     override fun tryToCompile(pathToFile: String): KotlincInvokeStatus {
@@ -93,22 +101,33 @@ class JVMCompiler(private val arguments: String = "") : CommonCompiler() {
         return status
     }
 
+    override fun exec(path: String, streamType: Stream): String = commonExec("java -jar $path", streamType)
     //super.exec(path, CompilerType.JVM, Stream.INPUT)
-    override fun exec(path: String): String {
-        val proc = ProcessBuilder("/bin/bash", "-c", "java -jar $path").start()
-        try {
-            val a = proc.waitFor(5L, TimeUnit.SECONDS)
-            if (!a) {
-                while (proc.isAlive) proc.destroyForcibly()
-                return ""
-            }
-        } catch (e: IllegalThreadStateException) {
-            println("exit value = ${proc.exitValue()}")
-        }
-        val result = proc.readStream(Stream.INPUT)
-        while (proc.isAlive) proc.destroyForcibly()
-        return result
-    }
+//    override fun exec(path: String): String {
+////        val line = "java -jar $path"
+////        try {
+////            val cmdLine = CommandLine.parse(line)
+////            val executor = DefaultExecutor().also {
+////                it.watchdog = ExecuteWatchdog(5 * 1000)
+////            }
+////            val exitValue = executor.execute(cmdLine)
+////        } catch (e: ExecuteException) {
+////
+////        }
+//        val proc = ProcessBuilder("/bin/bash", "-c", "java -jar $path").start()
+//        try {
+//            val a = proc.waitFor(5L, TimeUnit.SECONDS)
+//            if (!a) {
+//                while (proc.isAlive) proc.destroyForcibly()
+//                return ""
+//            }
+//        } catch (e: IllegalThreadStateException) {
+//            println("exit value = ${proc.exitValue()}")
+//        }
+//        val result = proc.readStream(Stream.INPUT)
+//        while (proc.isAlive) proc.destroyForcibly()
+//        return result
+//    }
 
     private fun analyzeErrorMessage(msg: String): Boolean = !msg.split("\n").any { it.contains(": error:") }
 
