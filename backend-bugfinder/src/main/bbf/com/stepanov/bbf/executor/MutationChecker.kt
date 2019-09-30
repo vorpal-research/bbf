@@ -83,7 +83,7 @@ object MutationChecker {
 //            }
         }
 
-        val isAccepted = compilersToStatus.map { it.second }.toSet().size == 1 && compilersToStatus.first().second
+        val isAccepted = compilersToStatus.all { it.second }
         if (isAccepted)
             log.debug("Mutation accepted")
         else

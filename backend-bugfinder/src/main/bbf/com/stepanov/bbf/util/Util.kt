@@ -75,5 +75,6 @@ fun KtNamedFunction.initBodyByValue(psiFactory: KtPsiFactory, value: String) {
 
 fun PsiElement.find(el: PsiElement): PsiElement? = this.node.getAllChildrenNodes().find { it.psi == el }?.psi
 
+//Returns true if all compilers compiling
 fun List<CommonCompiler>.checkCompilingForAllBackends(psiFile: PsiFile): Boolean =
-        this.map { it.checkCompilingText(psiFile.text) }.any { !it }
+        this.map { it.checkCompilingText(psiFile.text) }.all { it }

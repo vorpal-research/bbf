@@ -51,8 +51,9 @@ class BugFinder(private val path: String) : Runnable {
                 log.debug("Could not compile $path")
                 return
             }
+            println("LOL")
             log.debug("Start to mutate")
-
+            System.exit(0)
             Mutator(psiFile, psiCreator.ctx, compilers).startMutate()
             if (!compilers.checkCompilingForAllBackends(psiFile)) {
                 log.debug("Could not compile after mutation $path")

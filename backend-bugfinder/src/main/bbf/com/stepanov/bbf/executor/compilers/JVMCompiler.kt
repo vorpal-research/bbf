@@ -42,7 +42,6 @@ class JVMCompiler(private val arguments: String = "") : CommonCompiler() {
 
 
     override fun compile(path: String): CompilingResult {
-        println("PATH = $path")
         val kotlinc = CompilerArgs.pathToKotlinc
         val proc =
                 if (arguments.isEmpty())
