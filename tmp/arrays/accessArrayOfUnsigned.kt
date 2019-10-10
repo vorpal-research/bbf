@@ -1,5 +1,5 @@
-// WITH_UNSIGNED
-// IGNORE_BACKEND: JVM_IR, JS_IR
+// KJS_WITH_FULL_RUNTIME
+// WITH_RUNTIME
 
 val xs = Array(2) { 42u }
 

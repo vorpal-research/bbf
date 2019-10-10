@@ -1,5 +1,4 @@
 // !LANGUAGE: +InlineClasses
-// IGNORE_BACKEND: JVM_IR
 
 inline class Foo(val a: Int) {
     fun member(): String = ""
@@ -23,8 +22,8 @@ fun test(f: Foo): String {
     val a = id(f) // box unbox
     val b = id(f).idExtension() // box unbox
 
-    if (a.asResult() != 10) return "fail"
-    if (b.asResult() != 10) return "fail"
+    if (a.asResult() != 10) return "fail a"
+    if (b.asResult() != 10) return "fail b"
 
     return "OK"
 }

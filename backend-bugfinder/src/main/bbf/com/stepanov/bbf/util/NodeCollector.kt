@@ -37,7 +37,9 @@ class NodeCollector(val dir: String, val resPath: String) {
 
 
     fun collect() {
-        for (f in File(dir).listFiles().filter { it.name.endsWith(".kt") }.shuffled()) {
+        val size = File(dir).listFiles().filter { it.name.endsWith(".kt") }.size
+        for ((ind, f) in File(dir).listFiles().filter { it.name.endsWith(".kt") }.withIndex()) {
+            println("HANDLING $ind from $size file")
             val psiFile = PSICreator("").getPSIForFile(f.path)
             for (node in psiFile.node.getAllChildrenNodes()) {
                 if (!excludes.contains(node.elementType))

@@ -22,29 +22,14 @@ object B {
 }
 
 fun box(): String {
-    if (A.a !== B.a) {
-println("THEN");
-return "Fail 1: A.a !== B.a"
-}
+    if (A.a !== B.a) return "Fail 1: A.a !== B.a"
 
-    if (A.b !== B.b) {
-println("THEN");
-return "Fail 2: A.b !== B.b"
-}
+    if (A.b !== B.b) return "Fail 2: A.b !== B.b"
 
-    if (A.c !== B.c) {
-println("THEN");
-return "Fail 3: A.c !== B.c"
-}
+    if (A.c !== B.c) return "Fail 3: A.c !== B.c"
 
-    if (A.bNonConst === B.bNonConst) {
-println("THEN");
-return "Fail 4: A.bNonConst === B.bNonConst"
-}
-    if (A.bNullable === B.bNullable) {
-println("THEN");
-return "Fail 5: A.bNullable === B.bNullable"
-}
+    if (A.bNonConst === B.bNonConst) return "Fail 4: A.bNonConst === B.bNonConst"
+    if (A.bNullable === B.bNullable) return "Fail 5: A.bNullable === B.bNullable"
 
     return "OK"
 }

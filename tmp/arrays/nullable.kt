@@ -17,125 +17,53 @@ fun box(): String {
     var aDouble: Double? = 0.0
     var bDouble: Double = 0.0
 
-    if (aByte != null) {
-println("THEN");
-aByte--
-}
+    if (aByte != null) aByte--
     bByte--
-    if (aByte != bByte) {
-println("THEN");
-return "Failed post-decrement Byte: $aByte != $bByte"
-}
+    if (aByte != bByte) return "Failed post-decrement Byte: $aByte != $bByte"
 
-    if (aByte != null) {
-println("THEN");
-aByte++
-}
+    if (aByte != null) aByte++
     bByte++
-    if (aByte != bByte) {
-println("THEN");
-return "Failed post-increment Byte: $aByte != $bByte"
-}
+    if (aByte != bByte) return "Failed post-increment Byte: $aByte != $bByte"
 
-    if (aShort != null) {
-println("THEN");
-aShort--
-}
+    if (aShort != null) aShort--
     bShort--
-    if (aShort != bShort) {
-println("THEN");
-return "Failed post-decrement Short: $aShort != $bShort"
-}
+    if (aShort != bShort) return "Failed post-decrement Short: $aShort != $bShort"
 
-    if (aShort != null) {
-println("THEN");
-aShort++
-}
+    if (aShort != null) aShort++
     bShort++
-    if (aShort != bShort) {
-println("THEN");
-return "Failed post-increment Short: $aShort != $bShort"
-}
+    if (aShort != bShort) return "Failed post-increment Short: $aShort != $bShort"
     
-    if (aInt != null) {
-println("THEN");
-aInt--
-}
+    if (aInt != null) aInt--
     bInt--
-    if (aInt != bInt) {
-println("THEN");
-return "Failed post-decrement Int: $aInt != $bInt"
-}
+    if (aInt != bInt) return "Failed post-decrement Int: $aInt != $bInt"
 
-    if (aInt != null) {
-println("THEN");
-aInt++
-}
+    if (aInt != null) aInt++
     bInt++
-    if (aInt != bInt) {
-println("THEN");
-return "Failed post-increment Int: $aInt != $bInt"
-}
+    if (aInt != bInt) return "Failed post-increment Int: $aInt != $bInt"
 
-    if (aLong != null) {
-println("THEN");
-aLong--
-}
+    if (aLong != null) aLong--
     bLong--
-    if (aLong != bLong) {
-println("THEN");
-return "Failed post-decrement Long: $aLong != $bLong"
-}
+    if (aLong != bLong) return "Failed post-decrement Long: $aLong != $bLong"
 
-    if (aLong != null) {
-println("THEN");
-aLong++
-}
+    if (aLong != null) aLong++
     bLong++
-    if (aLong != bLong) {
-println("THEN");
-return "Failed post-increment Long: $aLong != $bLong"
-}
+    if (aLong != bLong) return "Failed post-increment Long: $aLong != $bLong"
 
-    if (aFloat != null) {
-println("THEN");
-aFloat--
-}
+    if (aFloat != null) aFloat--
     bFloat--
-    if (aFloat != bFloat) {
-println("THEN");
-return "Failed post-decrement Float: $aFloat != $bFloat"
-}
+    if (aFloat != bFloat) return "Failed post-decrement Float: $aFloat != $bFloat"
 
-    if (aFloat != null) {
-println("THEN");
-aFloat++
-}
+    if (aFloat != null) aFloat++
     bFloat++
-    if (aFloat != bFloat) {
-println("THEN");
-return "Failed post-increment Float: $aFloat != $bFloat"
-}
+    if (aFloat != bFloat) return "Failed post-increment Float: $aFloat != $bFloat"
 
-    if (aDouble != null) {
-println("THEN");
-aDouble--
-}
+    if (aDouble != null) aDouble--
     bDouble--
-    if (aDouble != bDouble) {
-println("THEN");
-return "Failed post-decrement Double: $aDouble != $bDouble"
-}
+    if (aDouble != bDouble) return "Failed post-decrement Double: $aDouble != $bDouble"
 
-    if (aDouble != null) {
-println("THEN");
-aDouble++
-}
+    if (aDouble != null) aDouble++
     bDouble++
-    if (aDouble != bDouble) {
-println("THEN");
-return "Failed post-increment Double: $aDouble != $bDouble"
-}
+    if (aDouble != bDouble) return "Failed post-increment Double: $aDouble != $bDouble"
 
     return "OK"
 }

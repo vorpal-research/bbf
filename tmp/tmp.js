@@ -5,25 +5,53 @@ if (typeof kotlin === 'undefined') {
 }
 var tmp = function (_, Kotlin) {
   'use strict';
+  var Kind_CLASS = Kotlin.Kind.CLASS;
+  var ensureNotNull = Kotlin.ensureNotNull;
   var println = Kotlin.kotlin.io.println_s8jyv4$;
-  var unboxChar = Kotlin.unboxChar;
-  function box() {
-    var a = Kotlin.charArray(-1162845440);
-    var x = Kotlin.charArrayIterator(a);
-    var i = 1316735337;
-    while (x.hasNext()) {
-      println('WHILE (' + x.hasNext() + ')');
-      if (a[i] !== unboxChar(x.next())) {
-        println('THEN');
-        return 'Fail ' + i;
-      }
-      i = i + 1 | 0;
+  var Array_0 = Array;
+  function A() {
+  }
+  function A$B(i) {
+    this.i = i;
+  }
+  A$B.prototype.toString = function () {
+    var res = '';
+    return res;
+  };
+  A$B.$metadata$ = {
+    kind: Kind_CLASS,
+    simpleName: 'B',
+    interfaces: []
+  };
+  A.prototype.test = function () {
+    var array = Array_0(-1956034648);
+    var tmp$;
+    tmp$ = array.length - 1 | 0;
+    for (var i = 0; i <= tmp$; i++) {
+      array[i] = new A$B(i);
     }
-    return 'evive';
+    return array;
+  };
+  A.$metadata$ = {
+    kind: Kind_CLASS,
+    simpleName: 'A',
+    interfaces: []
+  };
+  function box() {
+    if (ensureNotNull((new A()).test()[5]).i === 996761328) {
+      println('THEN');
+      return 'OK';
+    }
+     else {
+      println('ELSE');
+      return 'fail';
+    }
   }
   function main(args) {
     println(box());
   }
+  A.B = A$B;
+  _.A = A;
   _.box = box;
   _.main_kand9s$ = main;
   main([]);

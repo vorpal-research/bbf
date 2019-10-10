@@ -1,3 +1,3 @@
 fun main(){
-    while (true) println("Hey")
+    println("HI")
 }

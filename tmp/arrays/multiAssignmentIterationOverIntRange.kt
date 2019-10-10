@@ -1,4 +1,4 @@
-// IGNORE_BACKEND: JS_IR
+// KJS_WITH_FULL_RUNTIME
 // WITH_RUNTIME
 
 operator fun Int.component1(): String {

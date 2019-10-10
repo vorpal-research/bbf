@@ -1,0 +1,1 @@
+var A = rangeTo is String && y is String == forFunction1 in hashMap a []!!

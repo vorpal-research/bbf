@@ -1,4 +1,4 @@
-// IGNORE_BACKEND: JS_IR
+// KJS_WITH_FULL_RUNTIME
 // WITH_RUNTIME
 
 enum class ResultType constructor(val reason: String) {

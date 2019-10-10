@@ -36,20 +36,10 @@ public abstract class ProjectInfoJsonParser(): JsonParser<ProjectInfo> {
 class ProjectApiContext {
     public val projectInfoJsonParser: ProjectInfoJsonParser = object : ProjectInfoJsonParser(){
     }
-override fun toString(): String{
-var res = ""
-res += projectInfoJsonParser.toString()
-return res
-}}
+}
 
 fun box(): String {
     val context = ProjectApiContext()
     val array = context.projectInfoJsonParser.parse(JsonArray())
-    return if (array != null) {
-println("THEN");
-"OK"
-} else {
-println("ELSE");
-"fail"
-}
+    return if (array != null) "OK" else "fail"
 }

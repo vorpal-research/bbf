@@ -1,0 +1,25 @@
+2019-09-30 18:20:45,781 [main:62] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/mgfjw.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 0.27217408558767114 stacks: 0.27711425612702795
+2019-09-30 18:20:46,375 [main:76] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/mgfjw.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 0.27711425612702795
+2019-09-30 18:20:47,986 [main:62] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/cwczt.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 0.2404362862463421 stacks: 0.24105286198971215
+2019-09-30 18:20:48,663 [main:76] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/cwczt.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 0.24105286198971215
+2019-09-30 18:20:49,335 [main:62] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/cszso.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 0.3374202216996977 stacks: 0.3396094839609484
+2019-09-30 18:20:49,682 [main:76] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/cszso.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 0.3396094839609484
+2019-09-30 18:20:50,838 [main:62] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/auful.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 0.21513055121624639 stacks: 0.2088085416161126
+2019-09-30 18:20:51,247 [main:76] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/auful.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 0.2088085416161126
+2019-09-30 18:20:51,929 [main:62] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/suduw.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 0.22227079007758715 stacks: 0.21823794823082404
+2019-09-30 18:20:52,273 [main:76] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/suduw.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 0.21823794823082404
+2019-09-30 18:20:53,262 [main:62] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/wnfor.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 0.2139515099957465 stacks: 0.23351177730192718
+2019-09-30 18:20:53,661 [main:76] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/wnfor.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 0.23351177730192718
+2019-09-30 18:20:54,386 [main:62] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/rzinq.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 0.2153674832962138 stacks: 0.2094177460355889
+2019-09-30 18:20:54,785 [main:76] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/rzinq.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 0.2094177460355889
+2019-09-30 18:20:55,213 [main:62] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/ctvwl.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 0.011558669001751313 stacks: 4.9E-324
+2019-09-30 18:20:55,525 [main:76] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/ctvwl.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 4.9E-324
+2019-09-30 18:20:56,567 [main:62] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/iglvm.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 0.20576877610528804 stacks: 0.23366887984579138
+2019-09-30 18:20:57,006 [main:76] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/iglvm.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 0.23366887984579138
+2019-09-30 18:20:57,811 [main:62] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/tygdv.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 0.24561241455754665 stacks: 0.24883467222056926
+2019-09-30 18:20:58,263 [main:76] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/tygdv.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 0.24883467222056926
+2019-09-30 18:20:58,942 [main:62] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/fdibb.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 0.21765030336458907 stacks: 0.2120086289549377
+2019-09-30 18:20:59,314 [main:76] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/fdibb.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 0.2120086289549377
+2019-09-30 18:20:59,665 [main:62] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/qpqqr.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 0.49469065379552435 stacks: 0.49519927536231884
+2019-09-30 18:20:59,665 [main:64] - /home/stepanov/Kotlin/bbf/tmp/results/JVM/qpqqr.kt and /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt are duplicates!!!
+2019-09-30 18:20:59,895 [main:76] - Comparing /home/stepanov/Kotlin/bbf/tmp/results/JVM/qpqqr.kt /home/stepanov/Kotlin/bbf/tmp/results/test/test.kt 0.49519927536231884

@@ -1,7 +1,6 @@
+// KJS_WITH_FULL_RUNTIME
 // !LANGUAGE: +InlineClasses
 // WITH_RUNTIME
-// IGNORE_BACKEND: JVM_IR
-// IGNORE_BACKEND: JS_IR
 
 inline class Foo(val arg: String)
 

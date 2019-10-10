@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: JVM_IR
 // IGNORE_BACKEND: JS_IR
 // TODO: muted automatically, investigate should it be ran for JS or not
 // IGNORE_BACKEND: JS
@@ -243,16 +242,12 @@ val tests = arrayOf<TestFnBase>(TestFn0, TestFn1, TestFn2, TestFn3, TestFn4, Tes
 fun box(): String {
     for (fnI in 0 .. 22) {
         for (testI in 0 .. 22) {
-            if (fnI == testI){
-println("THEN");
-
+            if (fnI == testI) {
                 tests[testI].testGood(fns[fnI])
-}
-            else{
-println("ELSE");
-
+            }
+            else {
                 tests[testI].testBad(fns[fnI])
-}
+            }
         }
     }
 

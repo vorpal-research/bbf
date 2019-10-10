@@ -1,4 +1,4 @@
-// IGNORE_BACKEND: JS_IR
+// KJS_WITH_FULL_RUNTIME
 fun box(): String {
     val list = ArrayList<IntRange>()
     list.add(1..3)

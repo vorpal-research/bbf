@@ -1,5 +1,2 @@
 
-fun box(): String {
-for (OK in 1..return "")
-1
-}
+interface ContentBox<T : Content> : ContentBox<T> by Impl as ContentBoxT

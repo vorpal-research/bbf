@@ -10,6 +10,7 @@ import com.stepanov.bbf.util.readStream
 import com.stepanov.reduktor.executor.KotlincInvokeStatus
 import com.stepanov.reduktor.util.MsgCollector
 import java.io.*
+import java.lang.Exception
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -53,7 +54,7 @@ class JSCompiler(private val arguments: String = "") : CommonCompiler() {
         }
         var hasTimeout = false
         try {
-            futureExitCode.get(5L, TimeUnit.SECONDS)
+            futureExitCode.get(10L, TimeUnit.SECONDS)
         } catch (ex: TimeoutException) {
             hasTimeout = true
             futureExitCode.cancel(true)
@@ -128,27 +129,53 @@ class JSCompiler(private val arguments: String = "") : CommonCompiler() {
 //        }
 //    }
 
+//    override fun compile(path: String): CompilingResult {
+//        val proc =
+//                if (arguments.isEmpty())
+//                    Runtime.getRuntime().exec("${CompilerArgs.pathToKotlincJS} $path " +
+//                            "-libraries ${CompilerArgs.pathToJsKotlinLib} -output $pathToCompiled\n")
+//                else
+//                    Runtime.getRuntime().exec("${CompilerArgs.pathToKotlincJS} $path " +
+//                            "$arguments -libraries ${CompilerArgs.pathToJsKotlinLib} -output $pathToCompiled\n")
+//        try {
+//            while (proc.waitFor() != 0) {
+//            }
+//        } catch (e: IllegalThreadStateException) {
+//            return CompilingResult(-1, "")
+//        }
+//        val status = proc.readInputAndErrorStreams()
+//        while (proc.isAlive) {
+//            proc.destroyForcibly()
+//        }
+//        //proc.destroy()
+//        val isSuccess = analyzeErrorMessage(status)
+//        //println("success = $isSuccess")
+//        return if (isSuccess) {
+//            val oldStr = FileReader(File(pathToCompiled)).readText()
+//            val newStr = "const kotlin = require(\"${CompilerArgs.pathToJsKotlinLib}/kotlin.js\");\n\n$oldStr"
+//            val fw = FileWriter(pathToCompiled, false)
+//            val bw = BufferedWriter(fw)
+//            bw.write(newStr)
+//            bw.close()
+//            CompilingResult(0, pathToCompiled)
+//        } else {
+//            CompilingResult(-1, "")
+//        }
+//    }
+
     override fun compile(path: String): CompilingResult {
-        val proc =
+        val command =
                 if (arguments.isEmpty())
-                    Runtime.getRuntime().exec("${CompilerArgs.pathToKotlincJS} $path " +
-                            "-libraries ${CompilerArgs.pathToJsKotlinLib} -output $pathToCompiled\n")
+                    "${CompilerArgs.pathToKotlincJS} $path -libraries ${CompilerArgs.pathToJsKotlinLib} -output $pathToCompiled\n"
                 else
-                    Runtime.getRuntime().exec("${CompilerArgs.pathToKotlincJS} $path " +
-                            "$arguments -libraries ${CompilerArgs.pathToJsKotlinLib} -output $pathToCompiled\n")
+                    "${CompilerArgs.pathToKotlincJS} $path $arguments -libraries ${CompilerArgs.pathToJsKotlinLib} -output $pathToCompiled\n"
+        val status: String
         try {
-            while (proc.waitFor() != 0) {
-            }
-        } catch (e: IllegalThreadStateException) {
+            status = commonExec(command, Stream.BOTH)
+        } catch (e: Exception) {
             return CompilingResult(-1, "")
         }
-        val status = proc.readInputAndErrorStreams()
-        while (proc.isAlive) {
-            proc.destroyForcibly()
-        }
-        //proc.destroy()
         val isSuccess = analyzeErrorMessage(status)
-        //println("success = $isSuccess")
         return if (isSuccess) {
             val oldStr = FileReader(File(pathToCompiled)).readText()
             val newStr = "const kotlin = require(\"${CompilerArgs.pathToJsKotlinLib}/kotlin.js\");\n\n$oldStr"
@@ -161,7 +188,6 @@ class JSCompiler(private val arguments: String = "") : CommonCompiler() {
             CompilingResult(-1, "")
         }
     }
-
     private fun analyzeErrorMessage(msg: String): Boolean = !msg.split("\n").any { it.contains(": error:") }
 
 }

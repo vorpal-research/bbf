@@ -31,10 +31,7 @@ fun box(): String {
         setByteRes(x)
     }
 
-    if (byteResult != 1.toByte()) {
-println("THEN");
-return "fail 1"
-}
+    if (byteResult != 1.toByte()) return "fail 1"
 
     return "OK"
 }

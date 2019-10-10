@@ -1,4 +1,4 @@
-// IGNORE_BACKEND: JS_IR
+// KJS_WITH_FULL_RUNTIME
 // WITH_RUNTIME
 // CHECK_CASES_COUNT: function=intFoo count=3
 // CHECK_IF_COUNT: function=intFoo count=0

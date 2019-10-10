@@ -1,5 +1,5 @@
-// WITH_UNSIGNED
-// IGNORE_BACKEND: JS_IR, JVM_IR
+// KJS_WITH_FULL_RUNTIME
+// WITH_REFLECT
 
 fun prefixDecrementUByteLocal(): Any? {
     var a: UByte = 0u

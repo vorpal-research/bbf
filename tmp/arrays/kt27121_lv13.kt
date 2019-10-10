@@ -1,6 +1,3 @@
-// LANGUAGE_VERSION: 1.3
-// IGNORE_BACKEND: JS_IR
-
 interface A {
     fun test() = ok()
 

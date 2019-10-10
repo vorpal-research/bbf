@@ -1,4 +1,4 @@
-// IGNORE_BACKEND: JVM_IR
+// !LANGUAGE: -NoConstantValueAttributeForNonConstVals
 // TODO: muted automatically, investigate should it be ran for JS or not
 // IGNORE_BACKEND: NATIVE
 

@@ -16,72 +16,72 @@ import java.io.File
 import java.io.FileWriter
 
 // Transformation is here only for PSIFactory
-class TracesChecker(private val compilers: List<CommonCompiler>) : CompilerTestChecker, Transformation() {
+class TracesChecker(private val compilers: List<CommonCompiler>) : Transformation() {
 
-    override fun removeNodeIfPossible(file: KtFile, node: ASTNode): Boolean {
-        val tmp = KtPsiFactory(file.project).createWhiteSpace("\n")
-        return replaceNodeIfPossible(file, node, tmp.node)
-    }
+//    override fun removeNodeIfPossible(file: KtFile, node: ASTNode): Boolean {
+//        val tmp = KtPsiFactory(file.project).createWhiteSpace("\n")
+//        return replaceNodeIfPossible(file, node, tmp.node)
+//    }
+//
+//    override fun removeNodeIfPossible(file: FileASTNode, node: ASTNode) {
+//        val ktFile = file.psi as KtFile
+//        removeNodeIfPossible(ktFile, node)
+//    }
+//
+//    override fun removeNodesIfPossible(file: KtFile, nodes: List<ASTNode>): Boolean {
+//        val copies = mutableListOf<ASTNode>()
+//        val whiteSpaces = mutableListOf<ASTNode>()
+//        nodes.forEach { copies.add(it.copyElement()); whiteSpaces.add(KtPsiFactory(file.project).createWhiteSpace("\n").node) }
+//        for ((i, node) in nodes.withIndex()) {
+//            for (p in node.getAllParentsWithoutNode()) {
+//                try {
+//                    p.replaceChild(node, whiteSpaces[i])
+//                    break
+//                } catch (e: AssertionError) {
+//                }
+//            }
+//        }
+//        if (!checkTest(file.text)) {
+//            for ((i, node) in nodes.withIndex()) {
+//                for (p in whiteSpaces[i].getAllParentsWithoutNode()) {
+//                    try {
+//                        p.replaceChild(whiteSpaces[i], node)
+//                        break
+//                    } catch (e: AssertionError) {
+//                    }
+//                }
+//            }
+//            return false
+//        } else return true
+//    }
+//
+//
+//    override fun replaceNodeIfPossible(file: KtFile, node: ASTNode, replacement: ASTNode): Boolean {
+//        if (node.text.isEmpty() || node == replacement) return checkTest(file.text, file.name)
+//        for (p in node.getAllParentsWithoutNode()) {
+//            try {
+//                val oldText = file.text
+//                p.replaceChild(node, replacement)
+//                if (oldText == file.text)
+//                    continue
+//                if (!checkTest(file.text, file.name)) {
+//                    log.debug("REPLACING BACK")
+//                    p.replaceChild(replacement, node)
+//                    return false
+//                } else {
+//                    log.debug("SUCCESSFUL DELETING")
+//                    return true
+//                }
+//            } catch (e: AssertionError) {
+//                log.debug("Exception while deleting ${node.text} from $p")
+//            }
+//        }
+//        return false
+//    }
 
-    override fun removeNodeIfPossible(file: FileASTNode, node: ASTNode) {
-        val ktFile = file.psi as KtFile
-        removeNodeIfPossible(ktFile, node)
-    }
-
-    override fun removeNodesIfPossible(file: KtFile, nodes: List<ASTNode>): Boolean {
-        val copies = mutableListOf<ASTNode>()
-        val whiteSpaces = mutableListOf<ASTNode>()
-        nodes.forEach { copies.add(it.copyElement()); whiteSpaces.add(KtPsiFactory(file.project).createWhiteSpace("\n").node) }
-        for ((i, node) in nodes.withIndex()) {
-            for (p in node.getAllParentsWithoutNode()) {
-                try {
-                    p.replaceChild(node, whiteSpaces[i])
-                    break
-                } catch (e: AssertionError) {
-                }
-            }
-        }
-        if (!checkTest(file.text)) {
-            for ((i, node) in nodes.withIndex()) {
-                for (p in whiteSpaces[i].getAllParentsWithoutNode()) {
-                    try {
-                        p.replaceChild(whiteSpaces[i], node)
-                        break
-                    } catch (e: AssertionError) {
-                    }
-                }
-            }
-            return false
-        } else return true
-    }
-
-
-    override fun replaceNodeIfPossible(file: KtFile, node: ASTNode, replacement: ASTNode): Boolean {
-        if (node.text.isEmpty() || node == replacement) return checkTest(file.text, file.name)
-        for (p in node.getAllParentsWithoutNode()) {
-            try {
-                val oldText = file.text
-                p.replaceChild(node, replacement)
-                if (oldText == file.text)
-                    continue
-                if (!checkTest(file.text, file.name)) {
-                    log.debug("REPLACING BACK")
-                    p.replaceChild(replacement, node)
-                    return false
-                } else {
-                    log.debug("SUCCESSFUL DELETING")
-                    return true
-                }
-            } catch (e: AssertionError) {
-                log.debug("Exception while deleting ${node.text} from $p")
-            }
-        }
-        return false
-    }
-
-    override fun checkTest(text: String): Boolean {
+    fun checkTest(text: String): List<CommonCompiler>? {
         var resText = text
-        if (!text.contains("fun main(")) {
+        if (!resText.contains("fun main(")) {
             resText += "fun main(args: Array<String>) {\n" +
                     "    println(box())\n" +
                     "}"
@@ -89,13 +89,14 @@ class TracesChecker(private val compilers: List<CommonCompiler>) : CompilerTestC
         val writer = BufferedWriter(FileWriter(CompilerArgs.pathToTmpFile))
         writer.write(resText)
         writer.close()
+        log.debug("Executing traced code:\n$resText")
         val res = checkTest(resText, CompilerArgs.pathToTmpFile)
         File(CompilerArgs.pathToTmpFile).delete()
         return res
     }
 
 
-    override fun checkTest(text: String, pathToFile: String): Boolean {
+    fun checkTest(text: String, pathToFile: String): List<CommonCompiler>? {
         val hash = text.hashCode()
         if (alreadyChecked.containsKey(hash)) {
             log.debug("ALREADY CHECKED!!!")
@@ -104,23 +105,28 @@ class TracesChecker(private val compilers: List<CommonCompiler>) : CompilerTestC
         //Check for syntax correctness
         if (psiFactory.createFile(text).node.getAllChildrenNodes().any { it.psi is PsiErrorElement }) {
             log.debug("Not correct syntax")
-            alreadyChecked[hash] = false
-            return false
+            alreadyChecked[hash] = null
+            return null
         }
 
 
-        val results = mutableListOf<String>()
+        val results = mutableListOf<Pair<CommonCompiler, String>>()
         for (comp in compilers) {
             val status = comp.compile(pathToFile)
             if (status.status == -1)
-                return false
+                return null
             val res = comp.exec(status.pathToCompiled)
             log.debug("Result of ${comp.compilerInfo}: $res\n")
-            results.add(res.trim())
+            results.add(comp to res.trim())
         }
-        val res = results.toSet().size != 1
-        log.debug("Res = $res")
-        return res
+        val groupedRes = results.groupBy({ it.second }, valueTransform = { it.first })
+        return if (groupedRes.size == 1) {
+            null
+        } else {
+            val res = groupedRes.map { it.value.first() }
+            alreadyChecked[hash] = res
+            res
+        }
 
 
 //        val jvmComp = JVMCompiler()
@@ -175,8 +181,8 @@ class TracesChecker(private val compilers: List<CommonCompiler>) : CompilerTestC
 //        }
     }
 
-    override fun checkTest(tree: List<ASTNode>): Boolean {
-        if (tree.isEmpty()) return false
+    fun checkTest(tree: List<ASTNode>): List<CommonCompiler>? {
+        if (tree.isEmpty()) return null
         val text = StringBuilder()
         for (el in tree)
             text.append(el.text)
@@ -184,20 +190,18 @@ class TracesChecker(private val compilers: List<CommonCompiler>) : CompilerTestC
         return checkTest(text.toString())
     }
 
-    override fun getErrorInfo(): Error = Error("")
+    //    override fun getErrorInfo(): Error = Error("")
+//
+//    override fun getErrorMessage(): String = "error message"
+//
+//    override fun init(compilingPath: String, psiFactory: KtPsiFactory?): Error = Error("")
+//
+//    override fun reinit(): Error = Error("")
+//
+    override fun transform() = TODO()
 
-    override fun getErrorMessage(): String = "error message"
-
-    override fun init(compilingPath: String, psiFactory: KtPsiFactory?): Error = Error("")
-
-    override fun reinit(): Error = Error("")
-
-    override fun transform() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override var pathToFile: String = ""
-    override var alreadyChecked: HashMap<Int, Boolean> = HashMap()
+    var pathToFile: String = ""
+    var alreadyChecked: HashMap<Int, List<CommonCompiler>?> = HashMap()
 
     //Kostyl' for reduction process
     var prevJVMResult = setOf<String>()

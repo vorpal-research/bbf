@@ -51,6 +51,7 @@ abstract class CommonCompiler {
     }
 
     fun checkCompilingText(text: String): Boolean {
+        if (text.trim().isEmpty()) return false
         return if (!text.contains("fun main(")) {
             val writer = BufferedWriter(FileWriter(CompilerArgs.pathToTmpFile))
             writer.write(text)
@@ -70,18 +71,20 @@ abstract class CommonCompiler {
         }
     }
 
-    fun commonExec(command: String, streamType: Stream = Stream.INPUT): String {
+    fun commonExec(command: String, streamType: Stream = Stream.INPUT, timeoutSec: Long = 5L): String {
         val cmdLine = CommandLine.parse(command)
         val outputStream = ByteArrayOutputStream()
         val errorStream = ByteArrayOutputStream()
         val executor = DefaultExecutor().also {
-            it.watchdog = ExecuteWatchdog(5 * 1000)
+            it.watchdog = ExecuteWatchdog(timeoutSec * 1000)
             it.streamHandler = PumpStreamHandler(outputStream, errorStream)
         }
         try {
             executor.execute(cmdLine)
         } catch (e: ExecuteException) {
             executor.watchdog.destroyProcess()
+            //Infinite cycle handling
+            return ""
         }
         return when (streamType) {
             Stream.INPUT -> outputStream.toString()
@@ -89,6 +92,7 @@ abstract class CommonCompiler {
             Stream.BOTH -> "OUTPUTSTREAM:\n$outputStream ERRORSTREAM:\n$errorStream"
         }
     }
+
 
     override fun toString(): String = compilerInfo
 }

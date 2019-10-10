@@ -1,5 +1,5 @@
-// !LANGUAGE: +NewInference
-// IGNORE_BACKEND: JS, JS_IR, JVM_IR
+// !LANGUAGE: +NewInference +FunctionReferenceWithDefaultValueAsOtherType
+// IGNORE_BACKEND: JS
 // WITH_RUNTIME
 
 import kotlin.test.assertEquals

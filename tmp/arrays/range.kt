@@ -1,4 +1,4 @@
-// IGNORE_BACKEND: JS_IR
+// KJS_WITH_FULL_RUNTIME
 fun isDigit(a: Int) : String {
     val aa = ArrayList<Int> ()
     aa.add(239)

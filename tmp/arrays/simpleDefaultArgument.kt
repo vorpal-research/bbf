@@ -1,5 +1,4 @@
-// !LANGUAGE: +NewInference
-// IGNORE_BACKEND: JS_IR, JVM_IR
+// !LANGUAGE: +NewInference +FunctionReferenceWithDefaultValueAsOtherType
 
 fun foo(x: String, y: String = "K"): String = x + y
 

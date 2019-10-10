@@ -1,5 +1,5 @@
-// !LANGUAGE: +NewInference
-// IGNORE_BACKEND: JS, JS_IR, JVM_IR
+// !LANGUAGE: +NewInference +FunctionReferenceWithDefaultValueAsOtherType
+// IGNORE_BACKEND: JS
 
 fun foo(vararg a: String, result: String = "OK"): String =
         if (a.size == 0) result else "Fail"

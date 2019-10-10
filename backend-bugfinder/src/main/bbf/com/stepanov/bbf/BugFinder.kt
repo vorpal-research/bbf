@@ -1,6 +1,5 @@
 package com.stepanov.bbf
 
-import com.intellij.psi.PsiFile
 import com.stepanov.bbf.executor.*
 import com.stepanov.reduktor.parser.PSICreator
 import com.stepanov.bbf.mutator.transformations.Transformation
@@ -27,6 +26,7 @@ class BugFinder(private val path: String) : Runnable {
 
     fun findBugsInFile() {
         try {
+            println("Let's go")
             ++counter
             log.debug("Name = $path")
             val psiCreator = PSICreator("")
@@ -38,8 +38,22 @@ class BugFinder(private val path: String) : Runnable {
                     }
             //Init compilers
             val compilersConf = BBFProperties.getStringGroupWithoutQuotes("BACKENDS")
-            compilersConf.filter { it.key.contains("JVM") }.forEach { compilers.add(JVMCompiler(it.value))}
-            compilersConf.filter { it.key.contains("JS") }.forEach { compilers.add(JSCompiler(it.value))}
+            compilersConf.filter { it.key.contains("JVM") }.forEach { compilers.add(JVMCompiler(it.value)) }
+            compilersConf.filter { it.key.contains("JS") }.forEach { compilers.add(JSCompiler(it.value)) }
+
+            val filterBackends = compilersConf.map { it.key }
+            val ignoreBackendsFromFile =
+                    psiFile.text.lineSequence()
+                            .filter { it.startsWith("// IGNORE_BACKEND:") }
+                            .map { it.substringAfter("// IGNORE_BACKEND:") }
+                            .map { it.split(",") }
+                            .flatten()
+                            .map { it.trim() }
+                            .toList()
+            if (ignoreBackendsFromFile.any { filterBackends.contains(it) }) {
+                log.debug("Skipped because one of the backends is ignoring")
+                return
+            }
 
             //Init lateinit vars
             Transformation.file = psiFile
@@ -51,9 +65,8 @@ class BugFinder(private val path: String) : Runnable {
                 log.debug("Could not compile $path")
                 return
             }
-            println("LOL")
             log.debug("Start to mutate")
-            System.exit(0)
+            
             Mutator(psiFile, psiCreator.ctx, compilers).startMutate()
             if (!compilers.checkCompilingForAllBackends(psiFile)) {
                 log.debug("Could not compile after mutation $path")
@@ -79,9 +92,10 @@ class BugFinder(private val path: String) : Runnable {
 
             val res = TracesChecker(compilers).checkTest(traced.text)
             log.debug("Result = $res")
-            if (res) {
+            if (res != null) {
                 val pathToSaveRes = CompilerArgs.resultsDir + "diffBehavior/${Random().getRandomVariableName(7)}.kt"
-                File(pathToSaveRes).writeText(traced.text)
+                val diffCompilers = res.joinToString(prefix = "// Different behavior happens on:")
+                File(pathToSaveRes).writeText("$diffCompilers\n${traced.text}")
                 BugManager.saveBug("", "", traced.text, BugType.DIFFBEHAVIOR)
             }
             return

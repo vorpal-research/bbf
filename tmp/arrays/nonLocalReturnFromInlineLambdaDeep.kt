@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: JS_IR
 // IGNORE_BACKEND: JVM_IR
 // WITH_RUNTIME
 // COMMON_COROUTINES_TEST
@@ -14,11 +13,7 @@ class Controller {
         x.resume(v * 2)
         COROUTINE_SUSPENDED
     }
-override fun toString(): String{
-var res = ""
-res += cResult.toString()
-return res
-}}
+}
 
 fun builder(c: suspend Controller.() -> Int): Controller {
     val controller = Controller()
@@ -45,10 +40,7 @@ fun box(): String {
         foo {
             run {
                 result += suspendHere(it).toString()
-                if (it == 2) {
-println("THEN");
-return@builder 56
-}
+                if (it == 2) return@builder 56
             }
         }
         // Should be unreachable
@@ -56,14 +48,8 @@ return@builder 56
         1
     }.cResult
 
-    if (result != "-24") {
-println("THEN");
-return "fail 1: $result"
-}
-    if (controllerResult != 56) {
-println("THEN");
-return "fail 2: $controllerResult"
-}
+    if (result != "-24") return "fail 1: $result"
+    if (controllerResult != 56) return "fail 2: $controllerResult"
 
     return "OK"
 }

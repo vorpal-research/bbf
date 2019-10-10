@@ -16,6 +16,8 @@ class EqualityMapper(private val file: KtFile, private val checker: CompilerTest
             val expressions = entry.getAllPSIChildrenOfType<KtReferenceExpression>()
             for (exp in expressions) {
                 val replacement = table.find { it.first.text == exp.text } ?: continue
+                //Avoid recursion
+                if (exp.text.trim() == replacement.first.text.trim()) continue
                 val copyOfReplacement = ktFactory.createExpression(replacement.second.text)
                 checker.replaceNodeIfPossible(file, exp, copyOfReplacement)
             }

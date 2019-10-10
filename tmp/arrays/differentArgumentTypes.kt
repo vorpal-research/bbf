@@ -1,4 +1,3 @@
-// IGNORE_BACKEND: JVM_IR
 // TARGET_BACKEND: JVM
 // WITH_REFLECT
 
@@ -27,10 +26,11 @@ annotation class Anno(
     val za: BooleanArray,
     val str: String,
     val k: KClass<*>,
+    val k2: KClass<*>,
     val e: AnnotationTarget,
     val a: Nested,
     val stra: Array<String>,
-    // val ka: Array<KClass<*>>,  // Arrays of class literals are not supported yet in AnnotationDeserializer
+    val ka: Array<KClass<*>>,
     val ea: Array<AnnotationTarget>,
     val aa: Array<Nested>
 )
@@ -54,10 +54,11 @@ fun f(): @Anno(
     [false, true],
     "lol",
     Number::class,
+    IntArray::class,
     AnnotationTarget.EXPRESSION,
     Nested("1"),
     ["lmao"],
-    // [Double::class, Unit::class],
+    [Double::class, Unit::class, LongArray::class, Array<String>::class],
     [AnnotationTarget.TYPEALIAS, AnnotationTarget.FIELD],
     [Nested("2"), Nested("3")]
 ) Unit {}
@@ -66,8 +67,9 @@ fun box(): String {
     assertEquals(
         "[@Anno(b=1, c=x, d=3.14, f=-2.72, i=42424242, j=239239239239239, s=42, z=true, " +
                 "ba=[-1], ca=[y], da=[-3.14159], fa=[2.7218], ia=[424242], ja=[239239239239], sa=[-43], za=[false, true], " +
-                "str=lol, k=class java.lang.Number, e=EXPRESSION, a=@Nested(value=1), " +
-                "stra=[lmao], ea=[TYPEALIAS, FIELD], aa=[@Nested(value=2), @Nested(value=3)])]",
+                "str=lol, k=class java.lang.Number, k2=class [I, e=EXPRESSION, a=@Nested(value=1), stra=[lmao], " +
+                "ka=[class java.lang.Double, class kotlin.Unit, class [J, class [Ljava.lang.String;], " +
+                "ea=[TYPEALIAS, FIELD], aa=[@Nested(value=2), @Nested(value=3)])]",
         ::f.returnType.annotations.toString()
     )
 

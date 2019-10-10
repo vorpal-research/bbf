@@ -1,10 +1,7 @@
-// !LANGUAGE: +ReleaseCoroutines
-// !API_VERSION: 1.3
 // IGNORE_BACKEND: NATIVE
-// IGNORE_BACKEND: JS
 // IGNORE_BACKEND: JVM_IR
-// IGNORE_BACKEND: JS_IR
 // WITH_COROUTINES
+// WITH_RUNTIME
 
 import helpers.*
 import kotlin.coroutines.*

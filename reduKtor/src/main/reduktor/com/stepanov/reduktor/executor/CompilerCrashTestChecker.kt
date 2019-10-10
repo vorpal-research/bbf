@@ -26,7 +26,7 @@ class KotlincInvokeStatus(
     fun hasCompilationError(): Boolean = !isCompileSuccess
 }
 
-class CommonCompilerCrashTestChecker(private val backend: CommonBackend) : CompilerTestChecker {
+open class CommonCompilerCrashTestChecker(private val backend: CommonBackend?) : CompilerTestChecker {
 
     override fun removeNodeIfPossible(file: KtFile, node: ASTNode): Boolean {
         val tmp = KtPsiFactory(file.project).createWhiteSpace("\n")
@@ -154,7 +154,7 @@ class CommonCompilerCrashTestChecker(private val backend: CommonBackend) : Compi
         var writer = File(pathToFile).bufferedWriter()
         writer.write(text)
         writer.close()
-        val status = backend.tryToCompile(compilingPath)
+        val status = backend!!.tryToCompile(compilingPath)
 //        var msg: String = ""
 //        if (CompilerArgs.isCompilerError)
 //            msg = tryToCompile().combinedOutput
@@ -249,7 +249,7 @@ class CommonCompilerCrashTestChecker(private val backend: CommonBackend) : Compi
     override fun init(compilingPath: String, psiFactory: KtPsiFactory?): Error {
         psiFactory?.let { this.psiFactory = it }
         this.compilingPath = compilingPath
-        val status = backend.tryToCompile(compilingPath)
+        val status = backend!!.tryToCompile(compilingPath)
         require(status.hasException) { "File has not contains bug for current version of kotlin compiler" }
         errs = status.combinedOutput
 //        if (CompilerArgs.isCompilerError)

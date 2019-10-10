@@ -1,4 +1,4 @@
-// IGNORE_BACKEND: JS_IR
+// KJS_WITH_FULL_RUNTIME
 class A {
     private val sb: StringBuilder = StringBuilder()
 

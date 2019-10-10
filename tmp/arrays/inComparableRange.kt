@@ -7,20 +7,9 @@
 class ComparablePair<T : Comparable<T>>(val first: T, val second: T) : Comparable<ComparablePair<T>> {
     override fun compareTo(other: ComparablePair<T>): Int {
         val result = first.compareTo(other.first)
-        return if (result != 0) {
-println("THEN");
-result
-} else {
-println("ELSE");
-second.compareTo(other.second)
-}
+        return if (result != 0) result else second.compareTo(other.second)
     }
-override fun toString(): String{
-var res = ""
-res += first.toString()
-res += second.toString()
-return res
-}}
+}
 
 fun <T : Comparable<T>> genericRangeTo(start: T, endInclusive: T) = start..endInclusive
 operator fun Double.rangeTo(other: Double) = genericRangeTo(this, other)

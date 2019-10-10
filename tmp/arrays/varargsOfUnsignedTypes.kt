@@ -1,6 +1,6 @@
 // IGNORE_BACKEND: JVM_IR
-// WITH_UNSIGNED
-// IGNORE_BACKEND: JS_IR
+// WITH_RUNTIME
+// KJS_WITH_FULL_RUNTIME
 
 fun uint(vararg us: UInt): UIntArray = us
 

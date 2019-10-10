@@ -1,5 +1,5 @@
+// KJS_WITH_FULL_RUNTIME
 // !LANGUAGE: +NewInference
-// IGNORE_BACKEND: JS_IR
 // WITH_RUNTIME
 
 // FILE: messages/foo.kt

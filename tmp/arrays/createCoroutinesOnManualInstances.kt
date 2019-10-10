@@ -1,15 +1,14 @@
-// LANGUAGE_VERSION: 1.3
-// TARGET_BACKEND: JVM
-// IGNORE_BACKEND: JVM_IR
+// IGNORE_BACKEND: JS_IR
 // WITH_RUNTIME
 // WITH_COROUTINES
+import helpers.ContinuationAdapter
 import kotlin.coroutines.*
 import kotlin.coroutines.intrinsics.COROUTINE_SUSPENDED
 
 fun runCustomLambdaAsCoroutine(e: Throwable? = null, x: (Continuation<String>) -> Any?): String {
     var result = "fail"
     var wasIntercepted = false
-    val c = (x as suspend () -> String).createCoroutine(object: helpers.ContinuationAdapter<String>() {
+    val c = (x as suspend () -> String).createCoroutine(object: ContinuationAdapter<String>() {
         override fun resumeWithException(exception: Throwable) {
             throw exception
         }
@@ -27,7 +26,7 @@ fun runCustomLambdaAsCoroutine(e: Throwable? = null, x: (Continuation<String>) -
                     return null
                 }
 
-                override fun <T> interceptContinuation(continuation: Continuation<T>) = object : helpers.ContinuationAdapter<T>() {
+                override fun <T> interceptContinuation(continuation: Continuation<T>) = object : ContinuationAdapter<T>() {
                     override val context: CoroutineContext
                         get() = continuation.context
 

@@ -11,11 +11,5 @@ class A : BK, KTrait {
 }
 
 fun box(): String {
-    return if (A().foo() == "30") {
-println("THEN");
-"OK"
-} else {
-println("ELSE");
-"fail"
-}
+    return if (A().foo() == "30") "OK" else "fail"
 }

@@ -1,5 +1,5 @@
 // !LANGUAGE: +NewInference
-// IGNORE_BACKEND: JS, JS_IR, JVM_IR
+// IGNORE_BACKEND: JS
 
 fun foo(x: String, vararg y: String): String =
         if (y.size == 0) x + "K" else "Fail"

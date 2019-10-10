@@ -1,16 +1,9 @@
 package com.stepanov.bbf
 
 import com.stepanov.bbf.executor.CompilerArgs
-import com.stepanov.bbf.executor.compilers.JSCompiler
-import com.stepanov.bbf.executor.compilers.JVMCompiler
-import com.stepanov.bbf.util.Stream
-import net.sourceforge.argparse4j.ArgumentParsers
-import org.apache.commons.exec.*
+import kotlinx.coroutines.*
 import org.apache.log4j.PropertyConfigurator
-import java.io.ByteArrayOutputStream
 import java.io.File
-import java.lang.Exception
-import kotlin.system.exitProcess
 
 
 //fun main(args: Array<String>) {
@@ -52,9 +45,8 @@ fun main(args: Array<String>) {
     //Init log4j
     PropertyConfigurator.configure("backend-bugfinder/src/main/resources/log4j.properties")
 
-    val isFromIdea = true
+    val isFromIdea = false
     val numOfThreads = 1
-
 
     if (isFromIdea) {
         if (numOfThreads == 1) {
@@ -110,28 +102,30 @@ fun main(args: Array<String>) {
 //
 //        }
     } else {
-        if (args.isEmpty()) throw IllegalArgumentException()
+        require(args.isNotEmpty())
         val fileName = args[0]
-        val bugFinderThread = Thread(BugFinder(fileName))
-        bugFinderThread.start()
-        val step = 10 * 1000L
-        val limit = 60 * 60 * 1000
-        var curTime = 0L
-        while (true) {
-            println("$curTime THREAD = ${bugFinderThread.id} is alive ${bugFinderThread.isAlive}")
-            Thread.sleep(step)
-            curTime += step
-            if (curTime > limit) {
-                while (bugFinderThread.isAlive) {
-                    bugFinderThread.interrupt()
-                }
-                System.exit(0)
-            }
-            if (!bugFinderThread.isAlive) {
-                break
-            }
-        }
+        BugFinder(fileName).findBugsInFile()
         System.exit(0)
+//        val bugFinderThread = Thread(BugFinder(fileName))
+//        bugFinderThread.start()
+//        val step = 10 * 1000L
+//        val limit = 60 * 60 * 1000
+//        var curTime = 0L
+//        while (true) {
+//            println("$curTime THREAD = ${bugFinderThread.id} is alive ${bugFinderThread.isAlive}")
+//            Thread.sleep(step)
+//            curTime += step
+//            if (curTime > limit) {
+//                while (bugFinderThread.isAlive) {
+//                    bugFinderThread.interrupt()
+//                }
+//                System.exit(0)
+//            }
+//            if (!bugFinderThread.isAlive) {
+//                break
+//            }
+//        }
+//        System.exit(0)
     }
 }
 
