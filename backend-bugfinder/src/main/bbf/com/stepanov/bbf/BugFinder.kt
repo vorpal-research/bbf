@@ -66,7 +66,7 @@ class BugFinder(private val path: String) : Runnable {
                 return
             }
             log.debug("Start to mutate")
-            
+
             Mutator(psiFile, psiCreator.ctx, compilers).startMutate()
             if (!compilers.checkCompilingForAllBackends(psiFile)) {
                 log.debug("Could not compile after mutation $path")
@@ -93,9 +93,6 @@ class BugFinder(private val path: String) : Runnable {
             val res = TracesChecker(compilers).checkTest(traced.text)
             log.debug("Result = $res")
             if (res != null) {
-                val pathToSaveRes = CompilerArgs.resultsDir + "diffBehavior/${Random().getRandomVariableName(7)}.kt"
-                val diffCompilers = res.joinToString(prefix = "// Different behavior happens on:")
-                File(pathToSaveRes).writeText("$diffCompilers\n${traced.text}")
                 BugManager.saveBug("", "", traced.text, BugType.DIFFBEHAVIOR)
             }
             return

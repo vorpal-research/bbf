@@ -1,9 +1,12 @@
 package com.stepanov.bomparatorgui
 
 import com.stepanov.bbf.executor.CommonCompiler
+import com.stepanov.bbf.executor.TracesChecker
 import com.stepanov.bbf.executor.compilers.JSCompiler
 import com.stepanov.bbf.executor.compilers.JVMCompiler
+import com.stepanov.bbf.mutator.transformations.Transformation
 import com.stepanov.bbf.util.BBFProperties
+import com.stepanov.reduktor.parser.PSICreator
 import javafx.application.Application
 import javafx.collections.FXCollections
 import javafx.collections.ObservableArray
@@ -19,6 +22,7 @@ import javafx.scene.text.Text
 import javafx.scene.text.TextFlow
 import javafx.stage.Stage
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch
+import java.io.File
 import java.net.URL
 import java.util.*
 

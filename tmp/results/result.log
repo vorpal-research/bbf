@@ -1,21 +1,11 @@
 *******************************************************************
 Compiler: 
 Type: DIFFBEHAVIOR
-CrashingCode: 
-fun test(i: Int): String {
-    when (0) {
-        (return " test1") -> {
-println("WHEN (return  test1)");
-0
-}
-        return "returnOK" -> {
-println("WHEN return returnOK");
-1
-}
-    }
-    i
-}
+CrashingCode: interface Wrapper { fun runBlock() }
 
-fun box(): String = "42"
+fun f() {
+        }
+    fun javaMethod(): String =
+        "(val arg: KClass<*>)"
 Message: 
 *******************************************************************

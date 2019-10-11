@@ -104,6 +104,7 @@ class JVMCompiler(private val arguments: String = "") : CommonCompiler() {
                 !MsgCollector.hasCompileError,
                 MsgCollector.hasException,
                 hasTimeout)
+
         return status
     }
 

@@ -48,6 +48,9 @@ fun main(args: Array<String>) {
     val isFromIdea = false
     val numOfThreads = 1
 
+    BugFinder("/home/stepanov/Kotlin/testProjects/CompilerCrushingTests/test/test.kt").findBugsInFile()
+    System.exit(0)
+
     if (isFromIdea) {
         if (numOfThreads == 1) {
             val listOfFiles = File(CompilerArgs.baseDir).listFiles().filter { it.name.endsWith(".kt") }

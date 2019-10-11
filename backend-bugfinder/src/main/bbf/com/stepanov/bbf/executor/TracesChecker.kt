@@ -5,6 +5,7 @@ import com.intellij.lang.FileASTNode
 import com.intellij.psi.PsiErrorElement
 import com.stepanov.reduktor.util.getAllChildrenNodes
 import com.stepanov.bbf.mutator.transformations.Transformation
+import com.stepanov.bbf.util.checkCompilingForAllBackends
 import org.apache.log4j.Logger
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtPsiFactory
@@ -89,7 +90,6 @@ class TracesChecker(private val compilers: List<CommonCompiler>) : Transformatio
         val writer = BufferedWriter(FileWriter(CompilerArgs.pathToTmpFile))
         writer.write(resText)
         writer.close()
-        log.debug("Executing traced code:\n$resText")
         val res = checkTest(resText, CompilerArgs.pathToTmpFile)
         File(CompilerArgs.pathToTmpFile).delete()
         return res
@@ -102,14 +102,22 @@ class TracesChecker(private val compilers: List<CommonCompiler>) : Transformatio
             log.debug("ALREADY CHECKED!!!")
             return alreadyChecked[hash]!!
         }
+
+        val psiFile = psiFactory.createFile(text)
         //Check for syntax correctness
-        if (psiFactory.createFile(text).node.getAllChildrenNodes().any { it.psi is PsiErrorElement }) {
+        if (psiFile.node.getAllChildrenNodes().any { it.psi is PsiErrorElement }) {
             log.debug("Not correct syntax")
             alreadyChecked[hash] = null
             return null
         }
 
+        log.debug("Trying to compile with main function:")
+        if (!compilers.checkCompilingForAllBackends(psiFile)) {
+            log.debug("Cannot compile with main")
+            return null
+        }
 
+        log.debug("Executing traced code:\n$text")
         val results = mutableListOf<Pair<CommonCompiler, String>>()
         for (comp in compilers) {
             val status = comp.compile(pathToFile)
