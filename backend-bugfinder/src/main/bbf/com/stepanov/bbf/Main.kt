@@ -13,6 +13,8 @@ import kotlin.system.exitProcess
 
 
 fun main(args: Array<String>) {
+    //Init log4j
+    PropertyConfigurator.configure("backend-bugfinder/src/main/resources/log4j.properties")
     val parser = ArgumentParsers.newFor("bbf").build()
     parser.addArgument("-r", "--reduce")
             .required(false)
@@ -33,13 +35,14 @@ fun main(args: Array<String>) {
         File(tmpPath).writeText(File(it).readText())
         val res = Reducer.reduce(tmpPath, compiler)
         for (r in res) {
-            println("Result of reducing it:\n${r.text}")
+            println("Result of reducing $it:\n${r.text}")
         }
         exitProcess(0)
     }
     arguments.getString("fuzz")?.let {
         require(File(it).isDirectory) { "Specify directory to take files for mutation" }
-        BugFinder(it).findBugsInFile()
+        val file = File(it).listFiles().random()
+        BugFinder(file.absolutePath).findBugsInFile()
         exitProcess(0)
     }
 }

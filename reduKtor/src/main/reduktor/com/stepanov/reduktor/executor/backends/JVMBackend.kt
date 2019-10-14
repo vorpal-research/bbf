@@ -21,8 +21,8 @@ class JVMBackend(private val arguments: String) : CommonBackend {
         val threadPool = Executors.newCachedThreadPool()
         val trashDir = "tmp/trash/"
         //Clean dir
-        FileUtils.cleanDirectory(File(trashDir))
-
+        if (File(trashDir).exists())
+            FileUtils.cleanDirectory(File(trashDir))
         val args =
                 if (arguments.isEmpty())
                     "$path -d $trashDir".split(" ")

@@ -47,20 +47,27 @@ fun main(args: Array<String>) {
 //        }
 //        Thread.sleep(1000)
 //    }
-    var file = File(args[0]).listFiles().random()
-    var cmdLine = CommandLine.parse("$PATH_TO_JAR $file")
+    val joinedArgs = args.joinToString(separator = " ")
+    var cmdLine = CommandLine.parse("$PATH_TO_JAR $joinedArgs")
     var executor = DefaultExecutor().also {
         it.watchdog = ExecuteWatchdog(TIMEOUT_SEC * 1000)
     }
     var handler = DefaultExecuteResultHandler()
+    var timeElapsed = 0
     executor.execute(cmdLine, handler)
 
-    var timeElapsed = 0
+    if (joinedArgs.contains("-r") || joinedArgs.contains("--reduce"))
+        while (true) {
+            println("Elapsed: $timeElapsed")
+            if (handler.hasResult()) System.exit(0)
+            timeElapsed += 1000
+            Thread.sleep(1000)
+        }
+
     while (true) {
         println("Elapsed: $timeElapsed")
         if (handler.hasResult()) {
-            file = File(args[0]).listFiles().random()
-            cmdLine = CommandLine.parse("$PATH_TO_JAR $file")
+            cmdLine = CommandLine.parse("$PATH_TO_JAR $joinedArgs")
             handler = DefaultExecuteResultHandler()
             executor = DefaultExecutor().also {
                 it.watchdog = ExecuteWatchdog(TIMEOUT_SEC * 1000)

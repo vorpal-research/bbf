@@ -16,7 +16,7 @@ class ChangeRandomASTNodesFromAnotherTrees : Transformation() {
         val randConst = Random.nextInt(numOfTries.first, numOfTries.second)
         log.debug("Trying to change some nodes to nodes from other programs $randConst times")
         for (i in 0..randConst) {
-            log.debug("Cur try №$i")
+            log.debug("Try №$i of $randConst")
             val nodes = file.node.getAllChildrenNodes().filter { it.elementType !in NodeCollector.excludes }
             val randomNode = nodes[Random.nextInt(0, nodes.size - 1)]
             //Searching nodes of same type in another files
