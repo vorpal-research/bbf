@@ -6,7 +6,7 @@ import com.stepanov.reduktor.parser.PSICreator
 import org.jetbrains.kotlin.lexer.KtTokens
 import java.io.File
 
-class NodeCollector(val dir: String, val resPath: String) {
+class NodeCollector(val dir: String) {
     val database = mutableMapOf<IElementType, MutableSet<String>>()
 
     companion object {
@@ -46,7 +46,7 @@ class NodeCollector(val dir: String, val resPath: String) {
                     database.getOrPut(node.elementType) { mutableSetOf(f.name) }.add(f.name)
             }
         }
-        val res = File(resPath)
+        val res = File("database.txt")
         database.forEach {
             res.appendText("${it.key} ${it.value}\n")
         }
