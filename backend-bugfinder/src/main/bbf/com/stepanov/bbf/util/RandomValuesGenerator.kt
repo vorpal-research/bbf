@@ -1,3 +1,5 @@
+@file:Suppress("IMPLICIT_CAST_TO_ANY")
+
 package com.stepanov.bbf.util
 
 import ru.spbstu.kotlin.generate.combinators.KCheck
@@ -53,6 +55,7 @@ fun generateDefValuesAsString(type: String): String {
 }
 
 
+@Suppress("UNCHECKED_CAST")
 private fun <T> generateDefValuesForDefaultTypes(type: String): T =
         when (type) {
             "Int" -> Random().nextInt()

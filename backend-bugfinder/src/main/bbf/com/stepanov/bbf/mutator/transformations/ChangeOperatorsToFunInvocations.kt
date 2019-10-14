@@ -13,7 +13,7 @@ class ChangeOperatorsToFunInvocations : Transformation() {
 
     override fun transform() {
         var oldText = file.text
-        var newText = ""
+        var newText: String
         while (true) {
             transformImpl()
             newText = file.text

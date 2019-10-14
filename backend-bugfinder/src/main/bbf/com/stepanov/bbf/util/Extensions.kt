@@ -292,7 +292,7 @@ fun String.isSubstringOf(other: String): Boolean {
 
 fun removeMainFromFiles(dir: String) {
     val files = mutableListOf<File>()
-    Files.find(Paths.get(dir), Int.MAX_VALUE, BiPredicate { t, u -> u.isRegularFile })
+    Files.find(Paths.get(dir), Int.MAX_VALUE, BiPredicate { _, u -> u.isRegularFile })
             .forEach { files.add(it.toFile()) }
     files.forEach {
         if (!it.name.contains("mutated"))

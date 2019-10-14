@@ -13,8 +13,6 @@ import java.util.*
 object BugComparator {
 
     fun compare(path1: String, path2: String, compiler: CommonCompiler): Pair<LinkedList<DiffMatchPatch.Diff>?, Pair<Double, Double>> {
-        val p1 = "/home/stepanov/Kotlin/backend-bugfinder/tmp/results/jvmCompilerErrors/test/wnorl.kt"
-        val p2 = "/home/stepanov/Kotlin/backend-bugfinder/tmp/results/jvmCompilerErrors/test/whenInUnreachbleFun.kt"
         val text1 = compiler.getErrorMessage(path1)
         val text2 = compiler.getErrorMessage(path2)
         val patch = DiffMatchPatch()
