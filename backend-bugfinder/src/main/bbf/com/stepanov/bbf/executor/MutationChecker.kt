@@ -28,6 +28,7 @@ object MutationChecker {
             //Saving text to tmp.kt
             val tmpPath = CompilerArgs.pathToTmpFile
             File(tmpPath).writeText(text)
+            log.debug("Checking for bug text: ${File(tmpPath).readText()}")
 
             //Checking for compiler bug and if bug, then save
             compilers.forEach { compiler ->

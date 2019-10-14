@@ -11,7 +11,7 @@
 /reduKtor/logs
 /backend-bugfinder/logs
 /backend-bugfinder/target
-/trash
+tmp/trash
 *.iml
 /bcomparatorgui/target/
 /kootstrap/.idea/

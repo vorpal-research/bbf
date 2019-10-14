@@ -57,13 +57,14 @@ class PSICreator(var projectDir: String) {
             }
         }
         //ctx = FooBarCompiler.analyzeBunchOfSources(env, targetFiles, cfg)!!
-        println("PSI Created")
         return targetFiles
     }
 
     fun setupMyEnv(cfg: CompilerConfiguration): KotlinCoreEnvironment {
 
         val disposable = Disposer.newDisposable()
+        //Use for windows
+        //System.setProperty("idea.io.use.fallback", "true")
         val env = KotlinCoreEnvironment.createForProduction(
                 disposable,
                 cfg,
@@ -179,11 +180,6 @@ class PSICreator(var projectDir: String) {
 
         return targetFiles.first()
     }
-
-    companion object {
-        const val compilerVersionConst = "1.3.51"
-    }
-
 
     var targetFiles: List<KtFile> = listOf()
     private var javaFiles = mutableListOf<PsiFile>()

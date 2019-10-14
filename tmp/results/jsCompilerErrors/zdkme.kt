@@ -1,5 +1,0 @@
-
-inline fun 
-()  {
-Result.Failure()
-}

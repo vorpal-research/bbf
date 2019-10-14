@@ -1,0 +1,1 @@
+val String = (1..1u).next

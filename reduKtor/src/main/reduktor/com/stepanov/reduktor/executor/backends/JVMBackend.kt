@@ -2,6 +2,7 @@ package com.stepanov.reduktor.executor.backends
 
 import com.stepanov.reduktor.executor.CompilerArgs
 import com.stepanov.reduktor.executor.KotlincInvokeStatus
+import org.apache.commons.io.FileUtils
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageLocation
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
@@ -9,6 +10,7 @@ import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
 import org.jetbrains.kotlin.config.IncrementalCompilation
 import org.jetbrains.kotlin.config.Services
+import java.io.File
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
@@ -17,18 +19,23 @@ class JVMBackend(private val arguments: String) : CommonBackend {
 
     override fun tryToCompile(path: String): KotlincInvokeStatus {
         val threadPool = Executors.newCachedThreadPool()
+        val trashDir = "tmp/trash/"
+        //Clean dir
+        FileUtils.cleanDirectory(File(trashDir))
+
         val args =
                 if (arguments.isEmpty())
-                    "$path -cp ${System.getProperty("java.class.path")} -d trash/".split(" ")
+                    "$path -d $trashDir".split(" ")
                 else
-                    "$path -cp ${System.getProperty("java.class.path")} -d trash/ $arguments".split(" ")
+                    "$path -d $trashDir $arguments".split(" ")
         val compiler = K2JVMCompiler()
         val compilerArgs = K2JVMCompilerArguments().apply { K2JVMCompiler().parseArguments(args.toTypedArray(), this) }
         if (CompilerArgs.classpath.isNotEmpty())
             compilerArgs.classpath = CompilerArgs.classpath
+        else
+            compilerArgs.classpath = System.getProperty("java.class.path")
         compilerArgs.jdkHome = CompilerArgs.jdkHome
         compilerArgs.jvmTarget = CompilerArgs.jvmTarget
-        println("IR = ${compilerArgs.useIR}")
         IncrementalCompilation.setIsEnabledForJvm(true)
 
         val services = Services.EMPTY

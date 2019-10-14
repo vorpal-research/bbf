@@ -35,8 +35,9 @@ class JSCompiler(private val arguments: String = "") : CommonCompiler() {
             tryToCompile(pathToFile).hasException
 
     override fun tryToCompile(pathToFile: String): KotlincInvokeStatus {
-        val tmpPath = "/tmp/tmp.js"
+        val tmpPath = "tmp/tmp.js"
         File(tmpPath).delete()
+        MsgCollector.clear()
         val args =
                 if (arguments.isEmpty())
                     "$pathToFile -libraries ${CompilerArgs.pathToJsKotlinLib} -output $tmpPath".split(" ")
@@ -46,7 +47,6 @@ class JSCompiler(private val arguments: String = "") : CommonCompiler() {
 //                "-output $tmpPath").split(" ")
         val compiler = K2JSCompiler()
         val compilerArgs = K2JSCompilerArguments().apply { K2JSCompiler().parseArguments(args.toTypedArray(), this) }
-        MsgCollector.clear()
         val services = Services.EMPTY
         val threadPool = Executors.newCachedThreadPool()
         val futureExitCode = threadPool.submit {
@@ -59,109 +59,16 @@ class JSCompiler(private val arguments: String = "") : CommonCompiler() {
             hasTimeout = true
             futureExitCode.cancel(true)
         }
-        File(tmpPath).delete()
         val status = KotlincInvokeStatus(MsgCollector.crashMessages.joinToString("\n") +
                 MsgCollector.compileErrorMessages.joinToString("\n"),
                 !MsgCollector.hasCompileError,
                 MsgCollector.hasException,
                 hasTimeout)
+        File(tmpPath).delete()
         return status
     }
 
     override fun exec(path: String, streamType: Stream): String = commonExec("node $path", streamType)
-//    //super.exec(path, CompilerType.JS, Stream.INPUT)
-//    override fun exec(path: String): String {
-//        val proc = ProcessBuilder("/bin/bash", "-c", "node $path").start()
-//        try {
-//            val a = proc.waitFor(5L, TimeUnit.SECONDS)
-//            if (!a) {
-//                while (proc.isAlive) proc.destroyForcibly()
-//                return ""
-//            }
-//        } catch (e: IllegalThreadStateException) {
-//            println("exit value = ${proc.exitValue()}")
-//        }
-//        val result = proc.readStream(Stream.INPUT)
-//        while (proc.isAlive) proc.destroyForcibly()
-//        return result
-//    }
-
-//    override fun compile(path: String): CompilingResult {
-//        val resultFilePath = "/home/stepanov/Kotlin/testProjects/backendBugsTests/lol.js"
-//        try {
-//            File(resultFilePath).delete()
-//        } catch (e: FileNotFoundException) {
-//        }
-////        println("path = $path")
-////        val text = BufferedReader(FileReader(File(path))).readLines().joinToString("\n")
-////        println("file = $text")
-////        println("CHECK COMPILING = ${checkCompiling(path)}")
-////        println("CHECK COMPILING TEXT = ${checkCompilingText(text)}")
-//        val args = ("$path -libraries ${CompilerArgs.pathToJsKotlinLib} " +
-//                "-output $resultFilePath").split(" ")
-//        val compiler = K2JSCompiler()
-//        val compilerArgs = K2JSCompilerArguments().apply { K2JSCompiler().parseArguments(args.toTypedArray(), this) }
-//        val services = Services.EMPTY
-//        val threadPool = Executors.newCachedThreadPool()
-//        val futureExitCode = threadPool.submit {
-//            compiler.exec(MsgCollector, services, compilerArgs)
-//        }
-//        var hasTimeout = false
-//        try {
-//            futureExitCode.get(3L, TimeUnit.SECONDS)
-//        } catch (ex: TimeoutException) {
-//            hasTimeout = true
-//        }
-//        val isSuccess = !MsgCollector.hasCompileError && !hasTimeout
-////        println("JsError1 = ${MsgCollector.compileErrorMessages.joinToString()}")
-////        println("JsError2 = ${MsgCollector.crashMessages.joinToString()}")
-//        MsgCollector.clear()
-//        return if (isSuccess) {
-//            val oldStr = FileReader(File(resultFilePath)).readText()
-//            val newStr = "const kotlin = require(\"${CompilerArgs.pathToJsKotlinLib}/kotlin.js\");\n\n$oldStr"
-//            val fw = FileWriter(resultFilePath, false)
-//            val bw = BufferedWriter(fw)
-//            bw.write(newStr)
-//            bw.close()
-//            CompilingResult(0, resultFilePath)
-//        } else {
-//            CompilingResult(-1, "")
-//        }
-//    }
-
-//    override fun compile(path: String): CompilingResult {
-//        val proc =
-//                if (arguments.isEmpty())
-//                    Runtime.getRuntime().exec("${CompilerArgs.pathToKotlincJS} $path " +
-//                            "-libraries ${CompilerArgs.pathToJsKotlinLib} -output $pathToCompiled\n")
-//                else
-//                    Runtime.getRuntime().exec("${CompilerArgs.pathToKotlincJS} $path " +
-//                            "$arguments -libraries ${CompilerArgs.pathToJsKotlinLib} -output $pathToCompiled\n")
-//        try {
-//            while (proc.waitFor() != 0) {
-//            }
-//        } catch (e: IllegalThreadStateException) {
-//            return CompilingResult(-1, "")
-//        }
-//        val status = proc.readInputAndErrorStreams()
-//        while (proc.isAlive) {
-//            proc.destroyForcibly()
-//        }
-//        //proc.destroy()
-//        val isSuccess = analyzeErrorMessage(status)
-//        //println("success = $isSuccess")
-//        return if (isSuccess) {
-//            val oldStr = FileReader(File(pathToCompiled)).readText()
-//            val newStr = "const kotlin = require(\"${CompilerArgs.pathToJsKotlinLib}/kotlin.js\");\n\n$oldStr"
-//            val fw = FileWriter(pathToCompiled, false)
-//            val bw = BufferedWriter(fw)
-//            bw.write(newStr)
-//            bw.close()
-//            CompilingResult(0, pathToCompiled)
-//        } else {
-//            CompilingResult(-1, "")
-//        }
-//    }
 
     override fun compile(path: String): CompilingResult {
         val command =

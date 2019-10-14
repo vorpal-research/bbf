@@ -2,12 +2,15 @@ package com.stepanov.bbfexecutor
 
 import org.apache.commons.exec.*
 import java.io.File
+import java.util.*
 
 const val PATH_TO_JAR = "java -jar backend-bugfinder/target/backendBugFinder-1.0-jar-with-dependencies.jar"
-const val TIMEOUT_SEC = 1800L //timeout 30 minutes
+val TIMEOUT_SEC = Properties()
+        .also { it.load(File("bbf.conf").inputStream()) }
+        .getProperty("BBF_TIMEOUT")?.toLongOrNull() ?: throw IllegalArgumentException("Can't init timeout value")
 
 data class BBFProcess(val cmd: CommandLine, val file: File,
-                      val handler: DefaultExecuteResultHandler, val executor: DefaultExecutor){
+                      val handler: DefaultExecuteResultHandler, val executor: DefaultExecutor) {
     fun execute() {
         executor.execute(cmd, handler)
     }

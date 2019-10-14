@@ -1,5 +1,0 @@
-
-fun 
-()  {
-Array<IllegalStateException>{}
-}

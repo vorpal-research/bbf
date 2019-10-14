@@ -1,3 +1,0 @@
-inline fun 
-() =
-Result.Failure()

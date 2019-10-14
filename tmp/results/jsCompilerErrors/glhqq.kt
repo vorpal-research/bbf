@@ -1,5 +1,0 @@
-
-fun 
-()  {
-Result.failure
-}

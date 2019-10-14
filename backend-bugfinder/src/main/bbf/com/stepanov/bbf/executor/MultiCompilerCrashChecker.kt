@@ -144,7 +144,7 @@ class MultiCompilerCrashChecker(private val compiler: CommonCompiler) : Compiler
 
 
     override fun init(compilingPath: String, psiFactory: KtPsiFactory?): Error {
-        pathToFile = com.stepanov.bbf.executor.CompilerArgs.pathToTmpFile
+        pathToFile = CompilerArgs.pathToTmpFile
         errs = compiler.getErrorMessage(compilingPath)
         return Error("")
     }

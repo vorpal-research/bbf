@@ -1,0 +1,1 @@
+val fn: IFn = (1==1UL).next

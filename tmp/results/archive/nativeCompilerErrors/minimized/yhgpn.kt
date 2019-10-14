@@ -1,2 +1,0 @@
-
-fun result() = (A)?::foo

@@ -18,7 +18,7 @@ object TextReporter : Reporter {
             |Message: ${it.msg}
             |*******************************************************************""".trimMargin()
         }
-        file.writeText(bugsToStr)
+        file.appendText(bugsToStr)
     }
 
 

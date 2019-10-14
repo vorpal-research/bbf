@@ -19,7 +19,7 @@ data class Bug(val compilerVersion: String, val msg: String, val crashingCode: S
 
 object BugManager {
 
-    val bugs = mutableListOf<Bug>()
+    private val bugs = mutableListOf<Bug>()
 
     fun saveBug(compilerVersion: String, msg: String, crashingCode: String, type: BugType = BugType.UNKNOWN) {
         val bug =

@@ -1,0 +1,1 @@
+class Map1 : HashMap<String, @JvmWildcard CharSequence>()

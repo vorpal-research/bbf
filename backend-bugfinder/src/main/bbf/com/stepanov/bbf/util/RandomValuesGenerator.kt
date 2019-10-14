@@ -1,6 +1,6 @@
 package com.stepanov.bbf.util
 
-import ru.spbstu.kotlin.generate.context.Gens
+import ru.spbstu.kotlin.generate.combinators.KCheck
 import ru.spbstu.kotlin.generate.util.asCharSequence
 import ru.spbstu.kotlin.generate.util.nextString
 import java.util.*
@@ -109,9 +109,8 @@ private fun createDefaultValueForContainer(name: String, typeParam: String): Str
 
 inline fun <reified T> getValue(): T {
     var res: T? = null
-    Gens.forAll(1) { v: T ->
+    KCheck.forAll(1) { v: T ->
         res = v
-        true
     }
     return res!!
 }

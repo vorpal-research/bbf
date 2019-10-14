@@ -1,4 +1,0 @@
-fun 
-(): IllegalStateException {
-box = return
-}

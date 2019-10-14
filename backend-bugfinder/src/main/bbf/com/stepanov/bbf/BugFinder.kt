@@ -36,6 +36,7 @@ class BugFinder(private val path: String) : Runnable {
                     } catch (e: Throwable) {
                         return
                     }
+
             //Init compilers
             val compilersConf = BBFProperties.getStringGroupWithoutQuotes("BACKENDS")
             compilersConf.filter { it.key.contains("JVM") }.forEach { compilers.add(JVMCompiler(it.value)) }
@@ -93,7 +94,7 @@ class BugFinder(private val path: String) : Runnable {
             val res = TracesChecker(compilers).checkTest(traced.text)
             log.debug("Result = $res")
             if (res != null) {
-                BugManager.saveBug("", "", traced.text, BugType.DIFFBEHAVIOR)
+                BugManager.saveBug(res.joinToString(separator = ","), "", traced.text, BugType.DIFFBEHAVIOR)
             }
             return
         } catch (e: Error) {
@@ -104,7 +105,6 @@ class BugFinder(private val path: String) : Runnable {
         }
     }
 
-    val bugs = mutableMapOf<String, KtFile>()
     private val compilers: MutableList<CommonCompiler> = mutableListOf()
     var counter = 0
     private val log = Logger.getLogger("bugFinderLogger")

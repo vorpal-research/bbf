@@ -6,11 +6,14 @@ import org.jetbrains.kotlin.psi.psiUtil.parents
 import com.stepanov.bbf.util.getAllChildrenNodes
 import com.stepanov.bbf.util.replaceThis
 import kotlin.random.Random
+import org.apache.log4j.Logger
 
 class ChangeRandomASTNodes : Transformation() {
 
     override fun transform() {
-        for (i in 0 until Random.nextInt(numOfSwaps.first, numOfSwaps.second)) {
+        val numOfSwaps = Random.nextInt(numOfSwaps.first, numOfSwaps.second)
+        for (i in 0 until numOfSwaps) {
+            log.debug("Swap $i from $numOfSwaps")
             val children = file.node.getAllChildrenNodes()
             //Swap random nodes
             var randomNode1 = children[Random.nextInt(children.size)]
@@ -24,7 +27,6 @@ class ChangeRandomASTNodes : Transformation() {
                     randomNode2 = children[Random.nextInt(children.size)]
                 else break
             }
-            val oldText = file.text
             val new = swap(randomNode1, randomNode2)
             if (!MutationChecker.checkTextCompiling(file.text)) {
                 swap(new.first, new.second)
@@ -46,5 +48,6 @@ class ChangeRandomASTNodes : Transformation() {
         return randomNode2 to randomNode1
     }
 
-    val numOfSwaps = 50 to 2000
+    val numOfSwaps = 50 to 1000
+    private val log = Logger.getLogger("mutatorLogger")
 }
