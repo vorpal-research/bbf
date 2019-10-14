@@ -46,6 +46,11 @@
             <name>google-maven</name>
             <url>https://dl.google.com/dl/android/maven2</url>
         </repository>
+        <repository>
+            <id>bintray-vorpal-research-kotlin-maven</id>
+            <name>vorpal-research-kotlin-maven</name>
+            <url>http://dl.bintray.com/vorpal-research/kotlin-maven</url>
+        </repository>
     </repositories>
 
     <build>

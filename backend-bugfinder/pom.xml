@@ -86,11 +86,6 @@
             <version>0.0.0.4</version>
         </dependency>
         <dependency>
-            <groupId>ru.spbstu</groupId>
-            <artifactId>kotlin-quasi-reflection</artifactId>
-            <version>0.0.0.1</version>
-        </dependency>
-        <dependency>
             <groupId>com.github.ajalt</groupId>
             <artifactId>clikt</artifactId>
             <version>2.0.0</version>
