@@ -56,27 +56,26 @@ fun main(args: Array<String>) {
     var timeElapsed = 0
     executor.execute(cmdLine, handler)
 
-    if (joinedArgs.contains("-r") || joinedArgs.contains("--reduce")) {
-        println("Start to reduce")
+
+
+    if (joinedArgs.contains("-f") || joinedArgs.contains("--fuzzing")) {
         while (true) {
-            if (handler.hasResult()) System.exit(0)
+            println("Elapsed: $timeElapsed")
+            if (handler.hasResult()) {
+                cmdLine = CommandLine.parse("$PATH_TO_JAR $joinedArgs")
+                handler = DefaultExecuteResultHandler()
+                executor = DefaultExecutor().also {
+                    it.watchdog = ExecuteWatchdog(TIMEOUT_SEC * 1000)
+                }
+                executor.execute(cmdLine, handler)
+                timeElapsed = 0
+            }
             timeElapsed += 1000
             Thread.sleep(1000)
         }
-    }
-
-    while (true) {
-        println("Elapsed: $timeElapsed")
-        if (handler.hasResult()) {
-            cmdLine = CommandLine.parse("$PATH_TO_JAR $joinedArgs")
-            handler = DefaultExecuteResultHandler()
-            executor = DefaultExecutor().also {
-                it.watchdog = ExecuteWatchdog(TIMEOUT_SEC * 1000)
-            }
-            executor.execute(cmdLine, handler)
-            timeElapsed = 0
+    } else {
+        while (true) {
+            if (handler.hasResult()) System.exit(0)
         }
-        timeElapsed += 1000
-        Thread.sleep(1000)
     }
 }

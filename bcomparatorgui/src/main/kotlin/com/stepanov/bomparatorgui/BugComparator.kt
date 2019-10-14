@@ -47,13 +47,10 @@ object BugComparator {
 
     fun compareDiffBehavior(path: String, compiler1: CommonCompiler, compiler2: CommonCompiler):
             Pair<String, LinkedList<DiffMatchPatch.Diff>?> {
-        println("EXECUTING = ${compiler1.compilerInfo} $path")
         val text1 = compileAndExecute(File(path).readText(), compiler1).trim()
         val output1 = BothStream(text1)
         val text2 = compileAndExecute(File(path).readText(), compiler2).trim()
         val output2 = BothStream(text2)
-        println("OUTPUT1= $output1")
-        println("OUTPUT2= $output2")
         return when {
             output1.inputStream.isEmpty() && output2.inputStream.isEmpty() ->
                 "" to DiffMatchPatch().diffMain(output1.errorStream, output2.errorStream)

@@ -4,9 +4,10 @@ import com.stepanov.bbf.executor.CompilerArgs
 import com.stepanov.bbf.executor.compilers.JSCompiler
 import com.stepanov.bbf.executor.compilers.JVMCompiler
 import com.stepanov.bbf.util.BBFProperties
-import com.stepanov.reduktor.executor.backends.JVMBackend
-import kotlinx.coroutines.*
 import net.sourceforge.argparse4j.ArgumentParsers
+import org.apache.log4j.Level
+import org.apache.log4j.LogManager
+import org.apache.log4j.Logger
 import org.apache.log4j.PropertyConfigurator
 import java.io.File
 import kotlin.system.exitProcess
@@ -15,6 +16,14 @@ import kotlin.system.exitProcess
 fun main(args: Array<String>) {
     //Init log4j
     PropertyConfigurator.configure("backend-bugfinder/src/main/resources/log4j.properties")
+
+    if (!CompilerArgs.getPropAsBoolean("LOG")) {
+        Logger.getRootLogger().level = Level.OFF
+        //Logger.getLogger("bugFinderLogger").level = Level.OFF
+        Logger.getLogger("mutatorLogger").level = Level.OFF
+        Logger.getLogger("reducerLogger").level = Level.OFF
+    }
+
     val parser = ArgumentParsers.newFor("bbf").build()
     parser.addArgument("-r", "--reduce")
             .required(false)
@@ -34,6 +43,7 @@ fun main(args: Array<String>) {
         require(!File(it).isDirectory) { "Specify file to reducing" }
         File(tmpPath).writeText(File(it).readText())
         val res = Reducer.reduce(tmpPath, compiler)
+        println("Start to reduce $it")
         for (r in res) {
             println("Result of reducing $it:\n${r.text}")
         }
