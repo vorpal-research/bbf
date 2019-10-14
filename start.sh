@@ -1,1 +1,1 @@
-java -jar target/bbf-1.0-jar-with-dependencies.jar -f tmp/arrays/ 2> /dev/null 
+java -jar target/bbf-1.0-jar-with-dependencies.jar "$@" 2> /dev/null 

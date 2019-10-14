@@ -56,13 +56,14 @@ fun main(args: Array<String>) {
     var timeElapsed = 0
     executor.execute(cmdLine, handler)
 
-    if (joinedArgs.contains("-r") || joinedArgs.contains("--reduce"))
+    if (joinedArgs.contains("-r") || joinedArgs.contains("--reduce")) {
+        println("Start to reduce")
         while (true) {
-            println("Elapsed: $timeElapsed")
             if (handler.hasResult()) System.exit(0)
             timeElapsed += 1000
             Thread.sleep(1000)
         }
+    }
 
     while (true) {
         println("Elapsed: $timeElapsed")
