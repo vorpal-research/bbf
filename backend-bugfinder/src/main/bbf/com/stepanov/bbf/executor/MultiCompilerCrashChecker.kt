@@ -15,7 +15,7 @@ import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtPsiFactory
 import java.io.File
 
-class MultiCompilerCrashChecker(private val compiler: CommonCompiler) : CompilerTestChecker, Transformation() {
+open class MultiCompilerCrashChecker(private val compiler: CommonCompiler?) : CompilerTestChecker, Transformation() {
 
     override fun removeNodeIfPossible(file: KtFile, node: ASTNode): Boolean {
         val tmp = KtPsiFactory(file.project).createWhiteSpace("\n")
@@ -65,8 +65,7 @@ class MultiCompilerCrashChecker(private val compiler: CommonCompiler) : Compiler
             if (!checkTest(file.text, file.name)) {
                 log.debug("REPLACING BACK")
                 replacement.replaceThis(backup)
-            }
-            else {
+            } else {
                 log.debug("SUCCESSFUL DELETING")
                 return true
             }
@@ -109,27 +108,44 @@ class MultiCompilerCrashChecker(private val compiler: CommonCompiler) : Compiler
 
     override fun checkTest(text: String): Boolean = checkTest(text, pathToFile)
 
-    override fun checkTest(text: String, pathToFile: String): Boolean {
+    internal fun isAlreadyCheckedOrWrong(text: String): Pair<Boolean, Boolean> {
         val hash = text.hashCode()
         if (alreadyChecked.containsKey(hash)) {
             log.debug("ALREADY CHECKED!!!")
-            return alreadyChecked[hash]!!
+            return true to alreadyChecked[hash]!!
         }
-        //Check for syntax correctness
         if (psiFactory.createFile(text).node.getAllChildrenNodes().any { it.psi is PsiErrorElement }) {
             log.debug("Not correct syntax")
             alreadyChecked[hash] = false
-            return false
+            return true to false
         }
+        return false to false
+    }
+
+
+    override fun checkTest(text: String, pathToFile: String): Boolean {
+        val firstCheck = isAlreadyCheckedOrWrong(text)
+        if (firstCheck.first) return firstCheck.second
+//        val hash = text.hashCode()
+//        if (alreadyChecked.containsKey(hash)) {
+//            log.debug("ALREADY CHECKED!!!")
+//            return alreadyChecked[hash]!!
+//        }
+//        //Check for syntax correctness
+//        if (psiFactory.createFile(text).node.getAllChildrenNodes().any { it.psi is PsiErrorElement }) {
+//            log.debug("Not correct syntax")
+//            alreadyChecked[hash] = false
+//            return false
+//        }
         val oldText = File(pathToFile).bufferedReader().readText()
         var writer = File(pathToFile).bufferedWriter()
         writer.write(text)
         writer.close()
-        val res = compiler.isCompilerBug(pathToFile)
+        val res = compiler!!.isCompilerBug(pathToFile)
         writer = File(pathToFile).bufferedWriter()
         writer.write(oldText)
         writer.close()
-        alreadyChecked[hash] = res
+        alreadyChecked[text.hashCode()] = res
         return res
     }
 
@@ -145,7 +161,7 @@ class MultiCompilerCrashChecker(private val compiler: CommonCompiler) : Compiler
 
     override fun init(compilingPath: String, psiFactory: KtPsiFactory?): Error {
         pathToFile = CompilerArgs.pathToTmpFile
-        errs = compiler.getErrorMessage(compilingPath)
+        errs = compiler?.getErrorMessage(compilingPath) ?: ""
         return Error("")
     }
 

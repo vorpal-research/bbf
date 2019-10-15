@@ -61,6 +61,7 @@ class BugFinder(private val path: String) : Runnable {
             MutationChecker.factory = KtPsiFactory(psiFile.project)
             MutationChecker.compilers = compilers
 
+
             //Check for compiling
             if (!compilers.checkCompilingForAllBackends(psiFile)) {
                 log.debug("Could not compile $path")
@@ -93,8 +94,15 @@ class BugFinder(private val path: String) : Runnable {
 
             val res = TracesChecker(compilers).checkTest(traced.text)
             log.debug("Result = $res")
+            //Save into tmp file and reduce
             if (res != null) {
-                BugManager.saveBug(res.joinToString(separator = ","), "", traced.text, BugType.DIFFBEHAVIOR)
+                File(CompilerArgs.pathToTmpFile).writeText(traced.text)
+                val reduced =
+                        if (CompilerArgs.shouldReduceDiffBehavior)
+                            Reducer.reduceDiffBehavior(CompilerArgs.pathToTmpFile, compilers)
+                        else
+                            traced.text
+                BugManager.saveBug(res.joinToString(separator = ","), "", reduced, BugType.DIFFBEHAVIOR)
             }
             return
         } catch (e: Error) {
