@@ -94,7 +94,9 @@ class SimplifyInheritance(private val file: KtFile, private val checker: Compile
                     if (!checker.checkTest(fileCopy.text))
                         it.replaceThis(oldFun)
                 }
-        tree.getOrAddNode(klass).getParents().forEach { tryToSimplifyInheritance(it.typeNode) }
+        tree.getOrAddNode(klass).getParents()
+                .filter { it.typeNode.name != klass.name }
+                .forEach { tryToSimplifyInheritance(it.typeNode) }
     }
 
 

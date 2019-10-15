@@ -43,6 +43,8 @@ class RemoveInheritance(private val file: KtFile, private val checker: CompilerT
         val classNode = tree.getOrAddNode(klass)
         for (parent in classNode.getParents()) {
             val parentClass = parent.typeNode
+            //Avoid recursion
+            if (parentClass.name == klass.name) continue
             if (parentClass.isInterface()) {
                 val abstractFuncs = parentClass.getAllPSIChildrenOfType<KtNamedFunction>()
                         .filterNot { it.hasBody() }
