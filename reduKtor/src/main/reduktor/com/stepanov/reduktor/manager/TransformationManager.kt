@@ -112,7 +112,7 @@ class TransformationManager(private val ktFiles: List<KtFile>) {
 //            DeleteComments(CCTC).transform(rFile)
 
         while (true) {
-            if (ReduKtorProperties.getPropAsBoolean("transformations") == true) {
+            if (ReduKtorProperties.getPropAsBoolean("TRANSFORMATIONS") == true) {
                 RemoveSuperTypeList(rFile, checker).transform()
                 rFile = KtPsiFactory(rFile.project).createFile(rFile.name, rFile.text)
                 log.debug("VERIFY RemoveSuperTypeList = ${checker.checkTest(rFile.text)}")
@@ -180,7 +180,7 @@ class TransformationManager(private val ktFiles: List<KtFile>) {
                 log.debug("VERIFY SimplifyStringConstants = ${checker.checkTest(rFile.text)}")
                 log.debug("CHANGES AFTER SimplifyStringConstants ${rFile.text != oldRes}")
             }
-            if (ReduKtorProperties.getPropAsBoolean("slicing") == true) {
+            if (ReduKtorProperties.getPropAsBoolean("SLICING") == true) {
                 var errorInfo = checker.getErrorInfo()
                 log.debug("ERROR INFO = $errorInfo")
                 Slicer(rFile, checker).computeSlice(errorInfo.line, Slicer.Level.INTRAPROCEDURAL)
@@ -195,7 +195,7 @@ class TransformationManager(private val ktFiles: List<KtFile>) {
                 log.debug("CHANGES AFTER CLASS ${rFile.text != oldRes}")
                 log.debug("VERIFY CLASS = ${checker.checkTest(rFile.text)}")
             }
-            if (ReduKtorProperties.getPropAsBoolean("transformations") == true) {
+            if (ReduKtorProperties.getPropAsBoolean("TRANSFORMATIONS") == true) {
                 RemoveParameterFromDeclaration(rFile, checker).transform()
                 rFile = KtPsiFactory(rFile.project).createFile(rFile.name, rFile.text)
                 log.debug("VERIFY RemoveParameterFromDeclaration = ${checker.checkTest(rFile.text)}")
@@ -218,7 +218,7 @@ class TransformationManager(private val ktFiles: List<KtFile>) {
                 log.debug("CHANGES AFTER EMPTY ${rFile.text != oldRes}")
                 log.debug("VERIFY EMPTY = ${checker.checkTest(rFile.text)}")
             }
-            if (ReduKtorProperties.getPropAsBoolean("fastReduce") == true) {
+            if (ReduKtorProperties.getPropAsBoolean("FASTREDUCE") == true) {
                 PSIReducer(rFile, checker).transform()
                 rFile = KtPsiFactory(rFile.project).createFile(rFile.name, rFile.text)
                 log.debug("CHANGES AFTER FASTREDUCE ${rFile.text != oldRes}")
@@ -231,7 +231,7 @@ class TransformationManager(private val ktFiles: List<KtFile>) {
                 log.debug("CHANGES AFTER HDD ${rFile.text != oldRes}")
                 log.debug("VERIFY HDD = ${checker.checkTest(rFile.text)}")
             }
-            if (ReduKtorProperties.getPropAsBoolean("transformations") == true) {
+            if (ReduKtorProperties.getPropAsBoolean("TRANSFORMATIONS") == true) {
                 EqualityMapper(rFile, checker).transform()
                 rFile = KtPsiFactory(rFile.project).createFile(rFile.name, rFile.text)
                 log.debug("CHANGES AFTER EqualityMapper ${rFile.text != oldRes}")
