@@ -71,7 +71,7 @@ abstract class CommonCompiler {
         }
     }
 
-    fun commonExec(command: String, streamType: Stream = Stream.INPUT, timeoutSec: Long = 5L): String {
+    fun commonExec(command: String, streamType: Stream = Stream.INPUT, timeoutSec: Long = 10L): String {
         val cmdLine = CommandLine.parse(command)
         val outputStream = ByteArrayOutputStream()
         val errorStream = ByteArrayOutputStream()
@@ -83,8 +83,7 @@ abstract class CommonCompiler {
             executor.execute(cmdLine)
         } catch (e: ExecuteException) {
             executor.watchdog.destroyProcess()
-            //Infinite cycle handling
-            return ""
+            return outputStream.toString()
         }
         return when (streamType) {
             Stream.INPUT -> outputStream.toString()
