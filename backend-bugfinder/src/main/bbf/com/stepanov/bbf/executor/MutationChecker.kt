@@ -71,6 +71,7 @@ object MutationChecker {
             return
         }
 
+        if (!File(dirWithPotentialDuplicates).exists()) File(dirWithPotentialDuplicates).mkdirs()
         if (shouldFilterDuplicateCompilerBugs) log.debug("TRYING TO FIND DUPLICATE in $dirWithPotentialDuplicates")
         if (shouldFilterDuplicateCompilerBugs && simpleHaveDuplicatesErrors(path, dirWithPotentialDuplicates, compiler)) {
             log.debug("Found duplicates")
