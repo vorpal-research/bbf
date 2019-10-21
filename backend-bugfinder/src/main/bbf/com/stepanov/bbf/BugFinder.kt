@@ -1,21 +1,23 @@
 package com.stepanov.bbf
 
-import com.stepanov.bbf.executor.*
-import com.stepanov.reduktor.parser.PSICreator
-import com.stepanov.bbf.mutator.transformations.Transformation
-import org.apache.log4j.Logger
-import org.jetbrains.kotlin.psi.KtFile
-import org.jetbrains.kotlin.psi.KtPsiFactory
+import com.stepanov.bbf.executor.CommonCompiler
+import com.stepanov.bbf.executor.CompilerArgs
+import com.stepanov.bbf.executor.MutationChecker
+import com.stepanov.bbf.executor.TracesChecker
 import com.stepanov.bbf.executor.compilers.JSCompiler
 import com.stepanov.bbf.executor.compilers.JVMCompiler
 import com.stepanov.bbf.manager.BugManager
 import com.stepanov.bbf.manager.BugType
 import com.stepanov.bbf.mutator.Mutator
+import com.stepanov.bbf.mutator.transformations.Transformation
 import com.stepanov.bbf.tracer.Tracer
 import com.stepanov.bbf.util.BBFProperties
 import com.stepanov.bbf.util.checkCompilingForAllBackends
-import java.io.File
 import com.stepanov.bbf.util.getRandomVariableName
+import com.stepanov.reduktor.parser.PSICreator
+import org.apache.log4j.Logger
+import org.jetbrains.kotlin.psi.KtPsiFactory
+import java.io.File
 import java.util.*
 
 class BugFinder(private val path: String) : Runnable {
@@ -60,7 +62,6 @@ class BugFinder(private val path: String) : Runnable {
             Transformation.file = psiFile
             MutationChecker.factory = KtPsiFactory(psiFile.project)
             MutationChecker.compilers = compilers
-
 
             //Check for compiling
             if (!compilers.checkCompilingForAllBackends(psiFile)) {

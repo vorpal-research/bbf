@@ -4,9 +4,10 @@ import com.stepanov.bbf.executor.CompilerArgs
 import com.stepanov.bbf.executor.compilers.JSCompiler
 import com.stepanov.bbf.executor.compilers.JVMCompiler
 import com.stepanov.bbf.util.BBFProperties
+import com.stepanov.bbf.util.FalsePositivesDeleter
 import net.sourceforge.argparse4j.ArgumentParsers
+import net.sourceforge.argparse4j.impl.Arguments
 import org.apache.log4j.Level
-import org.apache.log4j.LogManager
 import org.apache.log4j.Logger
 import org.apache.log4j.PropertyConfigurator
 import java.io.File
@@ -19,7 +20,7 @@ fun main(args: Array<String>) {
 
     if (!CompilerArgs.getPropAsBoolean("LOG")) {
         Logger.getRootLogger().level = Level.OFF
-        //Logger.getLogger("bugFinderLogger").level = Level.OFF
+        Logger.getLogger("bugFinderLogger").level = Level.OFF
         Logger.getLogger("mutatorLogger").level = Level.OFF
         Logger.getLogger("reducerLogger").level = Level.OFF
     }
@@ -31,6 +32,10 @@ fun main(args: Array<String>) {
     parser.addArgument("-f", "--fuzz")
             .required(false)
             .help("Fuzzing mode")
+    parser.addArgument("-c", "--clean")
+            .required(false)
+            .action(Arguments.storeTrue())
+            .help("Clean directories with bugs from bugs that are not reproduced")
     val arguments = parser.parseArgs(args)
     arguments.getString("reduce")?.let {
         val back = BBFProperties.getStringGroupWithoutQuotes("BACKEND_FOR_REDUCE").entries.first()
@@ -53,6 +58,10 @@ fun main(args: Array<String>) {
         require(File(it).isDirectory) { "Specify directory to take files for mutation" }
         val file = File(it).listFiles().random()
         BugFinder(file.absolutePath).findBugsInFile()
+        exitProcess(0)
+    }
+    arguments.getString("clean")?.let {
+        FalsePositivesDeleter().cleanDirs()
         exitProcess(0)
     }
 }

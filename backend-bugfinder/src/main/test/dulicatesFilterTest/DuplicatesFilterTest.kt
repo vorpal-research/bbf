@@ -1,17 +1,11 @@
 package dulicatesFilterTest
 
-import com.stepanov.bbf.executor.CommonCompiler
-import com.stepanov.bbf.executor.CompilerArgs
-import com.stepanov.bbf.executor.CompilerType
 import com.stepanov.bbf.executor.compilers.JVMCompiler
-import com.stepanov.bbf.util.FilterDuplcatesCompilerErrors
 import com.stepanov.bbf.util.FilterDuplcatesCompilerErrors.simpleIsSameErrs
 import com.stepanov.bbf.util.FilterDuplcatesCompilerErrors.simpleIsSameErrsWithStacktraces
 import com.stepanov.reduktor.executor.error.*
-import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
 import org.junit.Test
 import java.io.File
-import kotlin.test.assertEquals
 
 class DuplicatesFilterTest {
 

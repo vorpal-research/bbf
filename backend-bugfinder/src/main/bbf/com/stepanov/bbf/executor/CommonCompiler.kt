@@ -1,23 +1,13 @@
 package com.stepanov.bbf.executor
 
-import org.jetbrains.kotlin.cli.common.messages.CompilerMessageLocation
-import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
-import org.jetbrains.kotlin.cli.common.messages.MessageCollector
-import org.jetbrains.kotlin.psi.KtFile
 import com.stepanov.bbf.util.Stream
-import com.stepanov.bbf.util.readStream
 import com.stepanov.reduktor.executor.KotlincInvokeStatus
 import org.apache.commons.exec.*
+import org.jetbrains.kotlin.psi.KtFile
 import java.io.BufferedWriter
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileWriter
-import java.lang.Exception
-import java.util.concurrent.TimeUnit
-
-enum class CompilerType {
-    JVM, JS, NATIVE
-}
 
 data class CompilingResult(val status: Int, val pathToCompiled: String)
 
@@ -28,9 +18,10 @@ abstract class CommonCompiler {
     abstract fun compile(path: String): CompilingResult
     abstract fun tryToCompile(pathToFile: String): KotlincInvokeStatus
     abstract fun isCompilerBug(pathToFile: String): Boolean
+    abstract fun exec(path: String, streamType: Stream = Stream.INPUT): String
+
     abstract val compilerInfo: String
     abstract val pathToCompiled: String
-    abstract fun exec(path: String, streamType: Stream = Stream.INPUT): String
 
 
     fun compile(file: KtFile): CompilingResult = compile(file.name)
