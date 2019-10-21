@@ -71,7 +71,7 @@ abstract class CommonCompiler {
         }
     }
 
-    fun commonExec(command: String, streamType: Stream = Stream.INPUT, timeoutSec: Long = 10L): String {
+    fun commonExec(command: String, streamType: Stream = Stream.INPUT, timeoutSec: Long = 5L): String {
         val cmdLine = CommandLine.parse(command)
         val outputStream = ByteArrayOutputStream()
         val errorStream = ByteArrayOutputStream()
