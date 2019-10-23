@@ -32,6 +32,7 @@ object CompilerArgs {
     val pathToKotlincJS = getPropValueWithoutQuotes("KOTLINCJS")
     val pathToJsKotlinLib = "${System.getProperty("user.dir")}/tmp/lib/"
     val pathToTmpFile = getPropValueWithoutQuotes("TMPFILE")
+    val kotlinHome = getPropValueWithoutQuotes("KOTLIN_HOME")
 
     //RESULT
     val resultsDir = getPropValueWithoutQuotes("RESULTS")

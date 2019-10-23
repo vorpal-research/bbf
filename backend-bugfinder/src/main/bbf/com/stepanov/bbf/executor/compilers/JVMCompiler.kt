@@ -69,6 +69,7 @@ class JVMCompiler(private val arguments: String = "") : CommonCompiler() {
             compilerArgs.classpath = System.getProperty("java.class.path")
         compilerArgs.jdkHome = CompilerArgs.jdkHome
         compilerArgs.jvmTarget = CompilerArgs.jvmTarget
+        compilerArgs.kotlinHome = CompilerArgs.kotlinHome
         IncrementalCompilation.setIsEnabledForJvm(true)
 
         val services = Services.EMPTY
@@ -89,7 +90,6 @@ class JVMCompiler(private val arguments: String = "") : CommonCompiler() {
                 !MsgCollector.hasCompileError,
                 MsgCollector.hasException,
                 hasTimeout)
-
         return status
     }
 

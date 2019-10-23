@@ -46,6 +46,7 @@ class JSCompiler(private val arguments: String = "") : CommonCompiler() {
 //                "-output $tmpPath").split(" ")
         val compiler = K2JSCompiler()
         val compilerArgs = K2JSCompilerArguments().apply { K2JSCompiler().parseArguments(args.toTypedArray(), this) }
+        compilerArgs.kotlinHome = CompilerArgs.kotlinHome
         val services = Services.EMPTY
         val threadPool = Executors.newCachedThreadPool()
         val futureExitCode = threadPool.submit {
