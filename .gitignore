@@ -11,10 +11,10 @@
 /reduKtor/logs
 /backend-bugfinder/logs
 /backend-bugfinder/target
-tmp/trash
 *.iml
 /bcomparatorgui/target/
 /kootstrap/.idea/
 /kootstrap/README
 /kootstrap/pom.xml.orig
 /kootstrap/target/
+tmp/*

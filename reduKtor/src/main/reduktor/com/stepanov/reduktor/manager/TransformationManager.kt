@@ -196,6 +196,10 @@ class TransformationManager(private val ktFiles: List<KtFile>) {
                 log.debug("VERIFY CLASS = ${checker.checkTest(rFile.text)}")
             }
             if (ReduKtorProperties.getPropAsBoolean("TRANSFORMATIONS") == true) {
+//                MinorSimplifyings(rFile, checker).transform()
+//                rFile = KtPsiFactory(rFile.project).createFile(rFile.name, rFile.text)
+//                log.debug("VERIFY MinorSimplifyings = ${checker.checkTest(rFile.text)}")
+//                log.debug("CHANGES AFTER MinorSimplifyings ${rFile.text != oldRes}")
                 RemoveParameterFromDeclaration(rFile, checker).transform()
                 rFile = KtPsiFactory(rFile.project).createFile(rFile.name, rFile.text)
                 log.debug("VERIFY RemoveParameterFromDeclaration = ${checker.checkTest(rFile.text)}")
@@ -250,7 +254,7 @@ class TransformationManager(private val ktFiles: List<KtFile>) {
         log.debug("RESULT: ${rFile.text}")
 //        SAVING
         if (!isProject && ReduKtorProperties.getPropAsBoolean("SAVE_RESULT") == true) {
-            File(pathToSave.substring(0, pathToSave.indexOfLast { it == '/' })).mkdirs()
+            File(pathToSave.toString().substringBeforeLast('/')).mkdirs()
             val writer = PrintWriter(pathToSave.toString())
             writer.print(rFile.text)
             writer.close()

@@ -4,7 +4,8 @@ enum class BugType {
     BACKEND,
     FRONTEND,
     DIFFBEHAVIOR,
-    UNKNOWN
+    UNKNOWN,
+    DIFFCOMPILE
 }
 
 data class Bug(val compilerVersion: String, val msg: String, val crashingCode: String, val type: BugType) {

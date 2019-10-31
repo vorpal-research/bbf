@@ -5,7 +5,9 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiErrorElement
 import com.stepanov.bbf.Reducer
 import com.stepanov.bbf.executor.CompilerArgs.shouldFilterDuplicateCompilerBugs
+import com.stepanov.bbf.executor.CompilerArgs.shouldSaveCompileDiff
 import com.stepanov.bbf.manager.BugManager
+import com.stepanov.bbf.manager.BugType
 import com.stepanov.bbf.util.FilterDuplcatesCompilerErrors.simpleHaveDuplicatesErrors
 import com.stepanov.bbf.util.getAllParentsWithoutNode
 import com.stepanov.reduktor.util.getAllChildrenNodes
@@ -23,7 +25,7 @@ object MutationChecker {
         if (tree.node.getAllChildrenNodes().any { it.psi is PsiErrorElement })
             return false
         val compilersToStatus = compilers.map { it to it.checkCompilingText(text) }
-        log.debug(compilersToStatus.joinToString(separator = " ") { "${it.first.compilerInfo} ${it.second}" })
+        var foundCompilerBug = false
         if (CompilerArgs.shouldSaveCompilerBugs) {
             //Saving text to tmp.kt
             val tmpPath = CompilerArgs.pathToTmpFile
@@ -33,8 +35,19 @@ object MutationChecker {
             //Checking for compiler bug and if bug, then save
             compilers.forEach { compiler ->
                 if (compiler.isCompilerBug(tmpPath)) {
+                    foundCompilerBug = true
                     log.debug("Found ${compiler.compilerInfo} BUG:\n Text:\n ${File(tmpPath).readText()}")
                     saveCompilerBug(tmpPath, compiler)
+                }
+            }
+        }
+
+        if (!foundCompilerBug && shouldSaveCompileDiff) {
+            val grouped = compilersToStatus.groupBy { it.first.compilerInfo.split(" ").first() }
+            for (g in grouped) {
+                if (g.value.map { it.second }.toSet().size != 1) {
+                    val diffCompilers = g.value.groupBy { it.second }.mapValues { it.value.first().first.compilerInfo }.values
+                    BugManager.saveBug(diffCompilers.joinToString(separator = ","), "", text, BugType.DIFFCOMPILE)
                 }
             }
         }
