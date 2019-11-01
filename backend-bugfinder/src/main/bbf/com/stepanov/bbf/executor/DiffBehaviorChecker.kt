@@ -6,7 +6,7 @@ import org.apache.log4j.Logger
 import org.jetbrains.kotlin.psi.KtPsiFactory
 import java.io.File
 
-class DiffBehaviorReduktor(private val compilers: List<CommonCompiler>) : MultiCompilerCrashChecker(null) {
+class DiffBehaviorChecker(private val compilers: List<CommonCompiler>) : MultiCompilerCrashChecker(null) {
 
     private fun compileAndGetExecResult(): List<Pair<CommonCompiler, String>> {
         val results = mutableListOf<Pair<CommonCompiler, String>>()
@@ -77,7 +77,6 @@ class DiffBehaviorReduktor(private val compilers: List<CommonCompiler>) : MultiC
 
 
     val prevResults: MutableList<List<String>> = ArrayList()
-    private var firstCheck = true
 
     private val log = Logger.getLogger("bugFinderLogger")
 }

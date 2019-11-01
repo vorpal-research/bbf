@@ -2,7 +2,8 @@ package com.stepanov.bbf
 
 import com.intellij.psi.PsiFile
 import com.stepanov.bbf.executor.CommonCompiler
-import com.stepanov.bbf.executor.DiffBehaviorReduktor
+import com.stepanov.bbf.executor.DiffBehaviorChecker
+import com.stepanov.bbf.executor.DiffCompileChecker
 import com.stepanov.bbf.executor.MultiCompilerCrashChecker
 import com.stepanov.bbf.mutator.transformations.Transformation
 import com.stepanov.reduktor.executor.CompilerTestChecker
@@ -32,7 +33,15 @@ object Reducer {
     fun reduceDiffBehavior(pathToFile: String, compilers: List<CommonCompiler>, shouldSave: Boolean = false): String {
         val ktFile = PSICreator("").getPSIForFile(pathToFile, false)
         Transformation.file = ktFile
-        val res = reduceFile(ktFile, DiffBehaviorReduktor(compilers))
+        val res = reduceFile(ktFile, DiffBehaviorChecker(compilers))
+        if (shouldSave) saveFile(res)
+        return res.text
+    }
+
+    fun reduceDiffCompile(pathToFile: String, compilers: List<CommonCompiler>, shouldSave: Boolean = false): String {
+        val ktFile = PSICreator("").getPSIForFile(pathToFile, false)
+        Transformation.file = ktFile
+        val res = reduceFile(ktFile, DiffCompileChecker(compilers))
         if (shouldSave) saveFile(res)
         return res.text
     }

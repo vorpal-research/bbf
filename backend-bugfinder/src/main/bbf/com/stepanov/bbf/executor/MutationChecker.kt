@@ -47,7 +47,16 @@ object MutationChecker {
             for (g in grouped) {
                 if (g.value.map { it.second }.toSet().size != 1) {
                     val diffCompilers = g.value.groupBy { it.second }.mapValues { it.value.first().first.compilerInfo }.values
-                    BugManager.saveBug(diffCompilers.joinToString(separator = ","), "", text, BugType.DIFFCOMPILE)
+                    log.debug("Found compile diff bug on compilers $diffCompilers")
+                    val compilersForReducer = g.value.groupBy { it.second }.mapValues { it.value.first().first }.values.toList()
+                    File(CompilerArgs.pathToTmpFile).writeText(text)
+                    val reduced =
+                            if (CompilerArgs.shouldReduceDiffCompile)
+                                Reducer.reduceDiffCompile(CompilerArgs.pathToTmpFile, compilersForReducer)
+                            else
+                                text
+                    println("reducer = $reduced")
+                    BugManager.saveBug(diffCompilers.joinToString(separator = ","), "", reduced, BugType.DIFFCOMPILE)
                 }
             }
         }

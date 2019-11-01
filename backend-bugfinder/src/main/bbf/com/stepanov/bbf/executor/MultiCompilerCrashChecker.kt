@@ -108,7 +108,7 @@ open class MultiCompilerCrashChecker(private val compiler: CommonCompiler?) : Co
 
     override fun checkTest(text: String): Boolean = checkTest(text, pathToFile)
 
-    internal fun isAlreadyCheckedOrWrong(text: String): Pair<Boolean, Boolean> {
+    fun isAlreadyCheckedOrWrong(text: String): Pair<Boolean, Boolean> {
         val hash = text.hashCode()
         if (alreadyChecked.containsKey(hash)) {
             log.debug("ALREADY CHECKED!!!")

@@ -43,6 +43,7 @@ object CompilerArgs {
     val shouldSaveMutatedFiles = getPropAsBoolean("SAVE_MUTATED_FILES")
     val shouldSaveCompileDiff = getPropAsBoolean("SAVE_COMPILER_DIFFS")
     val shouldReduceDiffBehavior = getPropAsBoolean("REDUCE_DIFF_BEHAVIOR")
+    val shouldReduceDiffCompile = getPropAsBoolean("REDUCE_DIFF_COMPILE")
 
     //REDUKTOR
     val shouldFilterDuplicateCompilerBugs = getPropAsBoolean("FILTER_DUPLICATES")
