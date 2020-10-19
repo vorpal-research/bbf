@@ -1,4 +1,0 @@
-
-val f = buildSequence {
-        []
-    }.toList

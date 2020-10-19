@@ -1,1 +1,0 @@
-var l = 1e!!  = for(String in suma) sum++ a []!!

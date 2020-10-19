@@ -1,1 +1,0 @@
-var OK = sumval..[]!!

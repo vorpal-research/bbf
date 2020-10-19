@@ -1,5 +1,0 @@
-
-class kotlin
- {
-  object Char 
-}
