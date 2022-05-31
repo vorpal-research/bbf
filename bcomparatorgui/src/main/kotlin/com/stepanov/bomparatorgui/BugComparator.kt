@@ -2,7 +2,7 @@ package com.stepanov.bomparatorgui
 
 import com.stepanov.bbf.executor.CommonCompiler
 import com.stepanov.bbf.executor.CompilerArgs
-import com.stepanov.bbf.util.FilterDuplcatesCompilerErrors
+import com.stepanov.bbf.util.FilterDuplicateCompilerErrors
 import com.stepanov.bbf.util.Stream
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch
 import java.io.BufferedWriter
@@ -17,7 +17,7 @@ object BugComparator {
         val text2 = compiler.getErrorMessage(path2)
         val patch = DiffMatchPatch()
         val res = patch.diffMain(text1, text2)
-        return res to FilterDuplcatesCompilerErrors.getK(path1, path2, compiler)
+        return res to FilterDuplicateCompilerErrors.getK(path1, path2, compiler)
     }
 
 

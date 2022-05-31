@@ -8,7 +8,7 @@ import com.stepanov.bbf.executor.CompilerArgs.shouldFilterDuplicateCompilerBugs
 import com.stepanov.bbf.executor.CompilerArgs.shouldSaveCompileDiff
 import com.stepanov.bbf.manager.BugManager
 import com.stepanov.bbf.manager.BugType
-import com.stepanov.bbf.util.FilterDuplcatesCompilerErrors.simpleHaveDuplicatesErrors
+import com.stepanov.bbf.util.FilterDuplicateCompilerErrors.simpleHaveDuplicatesErrors
 import com.stepanov.bbf.util.getAllParentsWithoutNode
 import com.stepanov.reduktor.util.getAllChildrenNodes
 import org.apache.log4j.Logger
@@ -117,13 +117,13 @@ object MutationChecker {
                 p.replaceChild(node, replCopy)
                 if (oldText == file.text)
                     continue
-                if (!checkCompiling(file)) {
+                return if (!checkCompiling(file)) {
                     p.replaceChild(replCopy, node)
-                    return false
+                    false
                 } else {
-                    return true
+                    true
                 }
-            } catch (e: AssertionError) {
+            } catch (_: AssertionError) {
             }
         }
         return false

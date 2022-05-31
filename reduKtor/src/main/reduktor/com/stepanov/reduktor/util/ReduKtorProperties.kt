@@ -1,6 +1,5 @@
 package com.stepanov.reduktor.util
 
-import com.stepanov.reduktor.executor.CompilerArgs
 import java.io.File
 import java.util.*
 
@@ -21,7 +20,7 @@ object ReduKtorProperties {
                 .map { it.key as String to it.value as String }
                 .filter { it.first.startsWith(groupName) }
                 .toMap()
-                .mapKeys { it.key.takeLastWhile { it != '.' } }
+                .mapKeys { k -> k.key.takeLastWhile { it != '.' } }
                 .mapValues { it.value.drop(1).dropLast(1) }
     }
 

@@ -83,16 +83,18 @@ class MockCodeStyleManager(private val myProject: Project) : CodeStyleManager() 
 
     override fun getLineIndent(
             file: PsiFile,
-            offset: Int): String? = ""
+            offset: Int): String = ""
 
     override fun getLineIndent(
             document: Document,
-            offset: Int): String? = ""
+            offset: Int): String = ""
 
+    @Deprecated("Deprecated in Java")
     override fun getIndent(
             text: String,
             fileType: FileType): Indent = MyIndent()
 
+    @Deprecated("Deprecated in Java")
     override fun isLineToBeIndented(
             file: PsiFile,
             offset: Int): Boolean = false
@@ -104,12 +106,12 @@ class MockCodeStyleManager(private val myProject: Project) : CodeStyleManager() 
         }
 
         override fun min(anotherIndent: Indent) = function {
-            if (anotherIndent is MyIndent) MyIndent(Math.min(amount, anotherIndent.amount))
+            if (anotherIndent is MyIndent) MyIndent(kotlin.math.min(amount, anotherIndent.amount))
             else null
         }
 
         override fun max(anotherIndent: Indent) = function {
-            if (anotherIndent is MyIndent) MyIndent(Math.max(amount, anotherIndent.amount))
+            if (anotherIndent is MyIndent) MyIndent(kotlin.math.max(amount, anotherIndent.amount))
             else null
         }
 

@@ -149,15 +149,14 @@ class Tracer(private var tree: KtFile, private val ctx: BindingContext) : KtVisi
                 }
             }
             if (el is KtReturnExpression) {
-                val ret = el
-                if (ret.parent is KtBlockExpression) {
+                if (el.parent is KtBlockExpression) {
                     curTrack.forEach {
-                        ret.parent.addBefore(it, ret)
-                        ret.parent.addBefore(factory.createWhiteSpace("\n"), ret)
+                        el.parent.addBefore(it, el)
+                        el.parent.addBefore(factory.createWhiteSpace("\n"), el)
                     }
                 } else {
-                    val newBlock = factory.createBlock("${curTrack.joinToString("\n") { it.text }}\n${ret.text}")
-                    ret.replaceThis(newBlock)
+                    val newBlock = factory.createBlock("${curTrack.joinToString("\n") { it.text }}\n${el.text}")
+                    el.replaceThis(newBlock)
                 }
             }
         }
@@ -179,14 +178,16 @@ class Tracer(private var tree: KtFile, private val ctx: BindingContext) : KtVisi
     }
 
     override fun visitWhenExpression(expression: KtWhenExpression) {
-        for (entire in expression.entries) {
-            entire.expression?.let {
-                it.replaceThis(createNewBlockExpr(it, "WHEN ${entire.conditions.joinToString {
-                    if (it.text.first() == '"')
-                        it.text.substring(1, it.textLength - 1)
-                    else
-                        it.text
-                }}"))
+        for (entry in expression.entries) {
+            entry.expression?.let { entryExpression ->
+                entryExpression.replaceThis(createNewBlockExpr(entryExpression, "WHEN ${
+                    entry.conditions.joinToString { condition ->
+                        if (condition.text.first() == '"')
+                            condition.text.substring(1, condition.textLength - 1)
+                        else
+                            condition.text
+                    }
+                }"))
             }
         }
     }
@@ -212,8 +213,8 @@ class Tracer(private var tree: KtFile, private val ctx: BindingContext) : KtVisi
     private fun getClassWithName(name: String?): KtClass? = tree.getAllPSIChildrenOfType<KtClass>().find { it.name == name }
     private fun KotlinType.isIterable(): Boolean = this.memberScope.getFunctionNames().any { it.toString() == "iterator" }
     private fun KtExpression.getType(): KotlinType? {
-        val typesOfExpressions = this.getAllPSIChildrenOfType<KtExpression>().map { ctx.getType(it) }.filterNotNull()
-        val typeReferences = this.getAllPSIChildrenOfType<KtTypeReference>().map { it.getAbbreviatedTypeOrType(ctx) }.filterNotNull()
+        val typesOfExpressions = this.getAllPSIChildrenOfType<KtExpression>().mapNotNull { ctx.getType(it) }
+        val typeReferences = this.getAllPSIChildrenOfType<KtTypeReference>().mapNotNull { it.getAbbreviatedTypeOrType(ctx) }
         return when {
             typesOfExpressions.isNotEmpty() -> typesOfExpressions.first()
             typeReferences.isNotEmpty() -> typeReferences.first()

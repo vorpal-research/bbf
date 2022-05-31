@@ -64,7 +64,7 @@ class HierarchicalDeltaDebugger(private val tree: FileASTNode, private val check
     private fun getSublist(tree: List<ASTNode>, n: Int): ArrayList<List<ASTNode>> {
         val subList: ArrayList<List<ASTNode>> = arrayListOf()
         val step = tree.size / n
-        if (step < 2) return (0 until tree.size).mapTo(subList) { listOf(tree[it]) }
+        if (step < 2) return tree.indices.mapTo(subList) { listOf(tree[it]) }
         var cur = 0
         for (i in 0 until n) {
             if (i == tree.size)
@@ -95,10 +95,10 @@ class HierarchicalDeltaDebugger(private val tree: FileASTNode, private val check
         //Try to check subset
         for (sub in subList) {
             if (checker.checkTest(getCopyWithDeletingNodes(true, sub, tree).text)) {
-                if (tree.size == 1)
-                    return tree
+                return if (tree.size == 1)
+                    tree
                 else
-                    return ddmin_(sub, 2)
+                    ddmin_(sub, 2)
             }
         }
         //Try to check completeness of subsets

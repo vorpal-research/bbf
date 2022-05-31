@@ -35,7 +35,7 @@ class AddBlockToExpression : Transformation() {
             else
                 expr.append(it)
         }
-        try {
+        return try {
             val res = when (Random().nextInt(3)) {
                 0 -> psiFactory.createExpression("if (${expr}) {${exp.text}} else {${exp.text}}") as KtIfExpression
                 1 -> psiFactory.createExpression("when (${expr}) {\n true -> {${exp.text}}\n else -> {${exp.text}}\n}") as KtWhenExpression
@@ -45,9 +45,9 @@ class AddBlockToExpression : Transformation() {
             //Remove braces
             block.deleteChildInternal(block.lBrace!!.node)
             block.deleteChildInternal(block.rBrace!!.node)
-            return block
+            block
         } catch (e: Exception) {
-            return null
+            null
         }
     }
 

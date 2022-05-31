@@ -9,7 +9,7 @@ import org.apache.commons.cli.Options
  * Created by akhin on 7/11/16.
  */
 
-object opt {
+object Opt {
 
     private val options = Options()
 
@@ -40,7 +40,7 @@ object opt {
             .build()
 
     init {
-        opt::class.java.declaredFields
+        Opt::class.java.declaredFields
                 .filter { Option::class.java == it.type }
                 .forEach { options.addOption(it.get(this) as Option) }
     }
@@ -50,17 +50,17 @@ object opt {
 }
 
 val CommandLine.targetRoots: List<String>
-    get() = this.getOptionValues(opt.targetRoot.opt)?.toList()
+    get() = this.getOptionValues(Opt.targetRoot.opt)?.toList()
             ?: emptyList()
 
 val CommandLine.kotlinRoots: List<String>
-    get() = this.getOptionValues(opt.kotlinRoot.opt)?.asList()
+    get() = this.getOptionValues(Opt.kotlinRoot.opt)?.asList()
             ?: emptyList()
 
 val CommandLine.jarFiles: List<String>
-    get() = this.getOptionValues(opt.jarFile.opt)?.asList()
+    get() = this.getOptionValues(Opt.jarFile.opt)?.asList()
             ?: emptyList()
 
 val CommandLine.pomFile: String
-    get() = this.getOptionValue(opt.pomFile.opt)
+    get() = this.getOptionValue(Opt.pomFile.opt)
             ?: ""

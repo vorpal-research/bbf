@@ -2,8 +2,8 @@ package com.stepanov.reduktor.util
 
 import com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.cli.common.arguments.K2JVMCompilerArguments
-import org.jetbrains.kotlin.cli.common.messages.CompilerMessageLocation
 import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSeverity
+import org.jetbrains.kotlin.cli.common.messages.CompilerMessageSourceLocation
 import org.jetbrains.kotlin.cli.common.messages.MessageCollector
 import java.io.*
 import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
@@ -33,7 +33,7 @@ object TestChecker {
     //Fast check for compiling
     private fun tryToCompile(): Boolean {
 
-        val args = "${pathToFile} -nowarn -cp ${jarFile} -d trash/".split(" ")
+        val args = "$pathToFile -nowarn -cp $jarFile -d trash/".split(" ")
 
         val compiler = K2JVMCompiler()
         val compilerArgs = K2JVMCompilerArguments().apply { K2JVMCompiler().parseArguments(args.toTypedArray(), this) }
@@ -56,7 +56,7 @@ object TestChecker {
                 return hasException
             }
 
-            override fun report(severity: CompilerMessageSeverity, message: String, location: CompilerMessageLocation?) {
+            override fun report(severity: CompilerMessageSeverity, message: String, location: CompilerMessageSourceLocation?) {
                 if (severity == CompilerMessageSeverity.EXCEPTION) {
                     hasException = true
                     crashMessages.add(message)
@@ -83,7 +83,7 @@ object TestChecker {
 
     //FIXME!!!
     private fun doFormatting(path: String) {
-        val p = ProcessBuilder("/bin/bash", "-c", "ktlint -F " + path).start()
+        val p = ProcessBuilder("/bin/bash", "-c", "ktlint -F $path").start()
     }
 
     fun init(pathToScript: String, pathToFile: String) {

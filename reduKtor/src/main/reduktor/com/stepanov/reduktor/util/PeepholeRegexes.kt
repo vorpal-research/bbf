@@ -1,7 +1,5 @@
 package com.stepanov.reduktor.util
 
-import java.util.*
-
 object PeepholeRegexes {
 
     //Regex and replacing
@@ -20,8 +18,8 @@ object PeepholeRegexes {
     )
 
     val del_regexes = mutableMapOf(
-            Pair(Regex("""\s*=\s*[0-9]+"""), " = 0"),
-            Pair(Regex("""\s*=\s*[0-9]+"""), " = 1"),
+            Pair(Regex("""\s*=\s*\d+"""), " = 0"),
+            Pair(Regex("""\s*=\s*\d+"""), " = 1"),
             Pair(Regex("""\d+"""), "0"),
             Pair(Regex("""\d+"""), "1")
             //Change types on int?
@@ -33,10 +31,10 @@ object PeepholeRegexes {
             Pair(Regex("""\w+(\s*-\s*\w+)+"""), Regex("""\w+""")),
             Pair(Regex("""\w+(\s*\*\s*\w+)+"""), Regex("""\w+""")),
             Pair(Regex("""\w+(\s*/\s*\w+)+"""), Regex("""\w+""")),
-            Pair(Regex("""\".+\"?(\s*\+\s*\"+\w+\"+)+"""), Regex("""\"[^\"]+\"""")),
-            Pair(Regex("""\".+\"?(\s*\-\s*\"+\w+\"+)+"""), Regex("""\"[^\"]+\"""")),
-            Pair(Regex("""\".+\"?(\s*\*\s*\"+\w+\"+)+"""), Regex("""\"[^\"]+\"""")),
-            Pair(Regex("""\".+\"?(\s*/\s*\"+\w+\"+)+"""), Regex("""\"[^\"]+\""""))
+            Pair(Regex("""".+"?(\s*\+\s*"+\w+"+)+"""), Regex(""""[^"]+"""")),
+            Pair(Regex("""".+"?(\s*-\s*"+\w+"+)+"""), Regex(""""[^"]+"""")),
+            Pair(Regex("""".+"?(\s*\*\s*"+\w+"+)+"""), Regex(""""[^"]+"""")),
+            Pair(Regex("""".+"?(\s*/\s*"+\w+"+)+"""), Regex(""""[^"]+""""))
     )
 
 

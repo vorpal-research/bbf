@@ -2,19 +2,16 @@ package com.stepanov.reduktor
 
 import com.stepanov.reduktor.executor.CommonCompilerCrashTestChecker
 import com.stepanov.reduktor.executor.CompilerArgs
-import com.stepanov.reduktor.executor.backends.IR2JVMBackend
 import com.stepanov.reduktor.executor.backends.JSBackend
 import com.stepanov.reduktor.executor.backends.JVMBackend
-import com.stepanov.reduktor.parser.PSICreator
 import com.stepanov.reduktor.manager.TransformationManager
+import com.stepanov.reduktor.parser.PSICreator
 import com.stepanov.reduktor.util.ReduKtorProperties
 import net.sourceforge.argparse4j.ArgumentParsers
 import org.apache.log4j.PropertyConfigurator
-import org.jetbrains.kotlin.cli.jvm.K2JVMCompiler
-import java.io.File
+import kotlin.system.exitProcess
 
-
-fun main(args: Array<String>) {
+fun main() {
     //Log4j configuration
     PropertyConfigurator.configure("reduKtor/src/main/resources/log4j.properties")
     //Arg parsing
@@ -104,5 +101,5 @@ fun main(args: Array<String>) {
     } else {
         manager.doTransformations(CommonCompilerCrashTestChecker(backend))
     }
-    System.exit(0)
+    exitProcess(0)
 }

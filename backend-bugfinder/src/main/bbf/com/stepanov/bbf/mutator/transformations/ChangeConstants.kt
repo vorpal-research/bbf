@@ -42,5 +42,7 @@ class ChangeConstants : Transformation() {
                         psiFactory.createExpression(Random().getRandomVariableName(NAME_SIZE)))
             else false
 
-    private val NAME_SIZE = 5
+    private companion object {
+        private const val NAME_SIZE = 5
+    }
 }

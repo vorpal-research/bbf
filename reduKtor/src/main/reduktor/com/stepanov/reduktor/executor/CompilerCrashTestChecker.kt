@@ -5,7 +5,6 @@ import com.intellij.lang.FileASTNode
 import com.intellij.psi.PsiErrorElement
 import com.stepanov.reduktor.executor.backends.CommonBackend
 import com.stepanov.reduktor.executor.error.Error
-import com.stepanov.reduktor.util.MsgCollector
 import com.stepanov.reduktor.util.getAllChildrenNodes
 import com.stepanov.reduktor.util.getAllParentsWithoutNode
 import com.stepanov.reduktor.util.replaceThis
@@ -47,37 +46,37 @@ open class CommonCompilerCrashTestChecker(private val backend: CommonBackend?) :
                 try {
                     p.replaceChild(node, whiteSpaces[i])
                     break
-                } catch (e: AssertionError) {
+                } catch (_: AssertionError) {
                 }
             }
         }
-        if (!checkTest(file.text)) {
+        return if (!checkTest(file.text)) {
             for ((i, node) in nodes.withIndex()) {
                 for (p in whiteSpaces[i].getAllParentsWithoutNode()) {
                     try {
                         p.replaceChild(whiteSpaces[i], node)
                         break
-                    } catch (e: AssertionError) {
+                    } catch (_: AssertionError) {
                     }
                 }
             }
-            return false
-        } else return true
+            false
+        } else true
     }
 
 
     override fun replaceNodeOnItChild(file: KtFile, node: ASTNode, replacement: ASTNode): ASTNode? {
-        //If we trying to replace parent node to it child
+        //If we're trying to replace parent node to its child
         if (node.getAllChildrenNodes().contains(replacement)) {
             val backup = node.copyElement()
             node.replaceThis(replacement)
-            if (!checkTest(file.text, file.name)) {
+            return if (!checkTest(file.text, file.name)) {
                 log.debug("REPLACING BACK")
                 replacement.replaceThis(backup)
-                return backup
+                backup
             } else {
                 log.debug("SUCCESSFUL DELETING")
-                return null
+                null
             }
         }
 
@@ -88,7 +87,7 @@ open class CommonCompilerCrashTestChecker(private val backend: CommonBackend?) :
     override fun replaceNodeIfPossible(file: KtFile, node: ASTNode, replacement: ASTNode): Boolean {
         if (node.text.isEmpty() || node == replacement) return checkTest(file.text, file.name)
 
-        //If we trying to replace parent node to it child
+        //If we're trying to replace parent node to its child
         if (node.getAllChildrenNodes().contains(replacement)) {
             val backup = node.copyElement()
             node.replaceThis(replacement)
@@ -108,13 +107,13 @@ open class CommonCompilerCrashTestChecker(private val backend: CommonBackend?) :
                 p.replaceChild(node, replacement)
                 if (oldText == file.text)
                     continue
-                if (!checkTest(file.text, file.name)) {
+                return if (!checkTest(file.text, file.name)) {
                     log.debug("REPLACING BACK")
                     p.replaceChild(replacement, node)
-                    return false
+                    false
                 } else {
                     log.debug("SUCCESSFUL DELETING")
-                    return true
+                    true
                 }
             } catch (e: AssertionError) {
                 log.debug("Exception while deleting ${node.text} from $p")

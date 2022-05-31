@@ -20,7 +20,7 @@ object BBFProperties {
                 .map { it.key as String to it.value as String }
                 .filter { it.first.startsWith(groupName) }
                 .toMap()
-                .mapKeys { it.key.takeLastWhile { it != '.' } }
+                .mapKeys { (k, _) -> k.takeLastWhile { c -> c != '.' } }
     }
 
     fun getStringGroupWithoutQuotes(groupName: String): Map<String, String> =

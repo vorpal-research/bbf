@@ -8,7 +8,6 @@
 /reduKtor/logs
 /target
 /reduKtor/target
-/reduKtor/logs
 /backend-bugfinder/logs
 /backend-bugfinder/target
 *.iml

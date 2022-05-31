@@ -39,7 +39,7 @@ class RemoveParameterFromDeclaration(private val file: KtFile, private val check
                     val invocations = getAllInvocations(f)
                     for (i in invocations) {
                         invocationsCopies.add(i.copy() as KtCallExpression)
-                        if (index >= i.valueArgumentList?.arguments?.size ?: continue) {
+                        if (index >= (i.valueArgumentList?.arguments?.size ?: continue)) {
                             val newIndex = i.valueArgumentList!!.arguments.size - index
                             i.lambdaArguments.removeAt(newIndex)
                         } else {
@@ -54,7 +54,7 @@ class RemoveParameterFromDeclaration(private val file: KtFile, private val check
                         } else {
                             f.valueParameterList?.addParameter(pCopy)
                         }
-                        for (i in 0 until invocations.size) {
+                        for (i in invocations.indices) {
                             invocations[i].replaceThis(invocationsCopies[i])
                         }
                     } else {

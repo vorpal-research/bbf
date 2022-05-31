@@ -3,21 +3,18 @@ package com.stepanov.reduktor.parser
 import com.intellij.lang.java.JavaLanguage
 import com.intellij.mock.MockProject
 import com.intellij.openapi.extensions.ExtensionPoint
-import com.intellij.openapi.extensions.Extensions
 import com.intellij.openapi.util.Disposer
 import com.intellij.pom.PomModel
 import com.intellij.pom.PomTransaction
 import com.intellij.pom.core.impl.PomModelImpl
-import com.intellij.pom.tree.TreeAspect
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.impl.source.tree.TreeCopyHandler
-import org.jetbrains.kootstrap.FooBarCompiler
 import org.jetbrains.kootstrap.FooBarCompiler.setupMyCfg
-import org.jetbrains.kootstrap.util.opt
+import org.jetbrains.kootstrap.util.Opt
 import org.jetbrains.kootstrap.util.targetRoots
-import org.jetbrains.kotlin.cli.jvm.compiler.*
-import org.jetbrains.kotlin.config.CommonConfigurationKeys
+import org.jetbrains.kotlin.cli.jvm.compiler.EnvironmentConfigFiles
+import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.js.analyze.TopDownAnalyzerFacadeForJS
 import org.jetbrains.kotlin.js.config.JSConfigurationKeys
@@ -25,20 +22,21 @@ import org.jetbrains.kotlin.js.config.JsConfig
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.KtPsiFactory
 import org.jetbrains.kotlin.resolve.BindingContext
+import org.jetbrains.kotlin.resolve.CompilerEnvironment
 import java.io.File
 
 
 class PSICreator(var projectDir: String) {
 
     fun getPSI(): List<KtFile> {
-        val new_args = arrayOf("-t", projectDir)
+        val newArgs = arrayOf("-t", projectDir)
 
-        val cmd = opt.parse(new_args)
+        val cmd = Opt.parse(newArgs)
         cfg = setupMyCfg(cmd)
         env = setupMyEnv(cfg)
 
-        if (!Extensions.getRootArea().hasExtensionPoint(TreeCopyHandler.EP_NAME.name)) {
-            Extensions.getRootArea().registerExtensionPoint(
+        if (!env.project.extensionArea.hasExtensionPoint(TreeCopyHandler.EP_NAME.name)) {
+            env.project.extensionArea.registerExtensionPoint(
                     TreeCopyHandler.EP_NAME.name,
                     TreeCopyHandler::class.java.canonicalName,
                     ExtensionPoint.Kind.INTERFACE
@@ -63,7 +61,7 @@ class PSICreator(var projectDir: String) {
     fun setupMyEnv(cfg: CompilerConfiguration): KotlinCoreEnvironment {
 
         val disposable = Disposer.newDisposable()
-        //Use for windows
+        //Use for Windows
         //System.setProperty("idea.io.use.fallback", "true")
         val env = KotlinCoreEnvironment.createForProduction(
                 disposable,
@@ -76,7 +74,6 @@ class PSICreator(var projectDir: String) {
         }
 
         val pomModel = MyPomModelImpl(env)
-        TreeAspect(pomModel)
 
         val project = env.project as MockProject
         project.registerService(
@@ -94,7 +91,7 @@ class PSICreator(var projectDir: String) {
 
     private fun findAndCreateJavaFiles(projectDir: String) {
         val folder = File(projectDir)
-        for (entry in folder.listFiles()) {
+        for (entry in checkNotNull(folder.listFiles()) { "$folder is not a folder" }) {
             if (entry.isDirectory) {
                 findAndCreateJavaFiles(entry.absolutePath)
             } else if (entry.name.endsWith(".java")) {
@@ -106,12 +103,12 @@ class PSICreator(var projectDir: String) {
 
     fun reinit(projectDir: String): List<KtFile> {
         this.projectDir = projectDir
-        val new_args = arrayOf("-t", projectDir)
-        val cmd = opt.parse(new_args)
+        val newArgs = arrayOf("-t", projectDir)
+        val cmd = Opt.parse(newArgs)
 
         env = setupMyEnv(cfg)
-        if (!Extensions.getRootArea().hasExtensionPoint(TreeCopyHandler.EP_NAME.name)) {
-            Extensions.getRootArea().registerExtensionPoint(
+        if (!env.project.extensionArea.hasExtensionPoint(TreeCopyHandler.EP_NAME.name)) {
+            env.project.extensionArea.registerExtensionPoint(
                     TreeCopyHandler.EP_NAME.name,
                     TreeCopyHandler::class.java.canonicalName,
                     ExtensionPoint.Kind.INTERFACE
@@ -144,12 +141,12 @@ class PSICreator(var projectDir: String) {
     fun getPSIForFile(path: String, generateCtx: Boolean = true): KtFile {
         val newArgs = arrayOf("-t", path)
 
-        val cmd = opt.parse(newArgs)
-        cfg = FooBarCompiler.setupMyCfg(cmd)
+        val cmd = Opt.parse(newArgs)
+        cfg = setupMyCfg(cmd)
         env = setupMyEnv(cfg)
 
-        if (!Extensions.getRootArea().hasExtensionPoint(TreeCopyHandler.EP_NAME.name)) {
-            Extensions.getRootArea().registerExtensionPoint(
+        if (!env.project.extensionArea.hasExtensionPoint(TreeCopyHandler.EP_NAME.name)) {
+            env.project.extensionArea.registerExtensionPoint(
                     TreeCopyHandler.EP_NAME.name,
                     TreeCopyHandler::class.java.canonicalName,
                     ExtensionPoint.Kind.INTERFACE
@@ -176,7 +173,7 @@ class PSICreator(var projectDir: String) {
         //configuration.put(CommonConfigurationKeys.MODULE_NAME, "sample")
 
         if (generateCtx)
-            ctx = TopDownAnalyzerFacadeForJS.analyzeFiles(listOf(file), JsConfig(env.project, configuration)).bindingContext
+            ctx = TopDownAnalyzerFacadeForJS.analyzeFiles(listOf(file), JsConfig(env.project, configuration, CompilerEnvironment)).bindingContext
 
         return targetFiles.first()
     }

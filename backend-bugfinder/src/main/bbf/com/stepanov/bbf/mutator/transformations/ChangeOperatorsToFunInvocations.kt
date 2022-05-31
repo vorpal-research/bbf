@@ -27,7 +27,7 @@ class ChangeOperatorsToFunInvocations : Transformation() {
     //To handle nested constructions
     private fun transformImpl() {
         for (psiNode in file.getAllPSIDFSChildrenOfType<KtExpression>()) {
-            //Probablity!
+            //Probability!
             if (Random().nextBoolean())
                 continue
 

@@ -28,13 +28,13 @@ class RemoveInheritance(private val file: KtFile, private val checker: CompilerT
     }
 
     private fun tryToRemoveInheritance(klass: KtClass) {
-        val overrideProp = klass.getProperties()
+        val overrideProperties = klass.getProperties()
                 .filter { it.modifierList?.hasModifier(KtTokens.OVERRIDE_KEYWORD) ?: false }
                 .toMutableList()
-        val overrideFuncs = klass.getAllPSIChildrenOfType<KtNamedFunction>()
+        val overrideFunctions = klass.getAllPSIChildrenOfType<KtNamedFunction>()
                 .filter { it.modifierList?.hasModifier(KtTokens.OVERRIDE_KEYWORD) ?: false }
                 .toMutableList()
-        tryToRemoveInheritance1(tree.getOrAddNode(klass).typeNode, overrideFuncs, overrideProp)
+        tryToRemoveInheritance1(tree.getOrAddNode(klass).typeNode, overrideFunctions, overrideProperties)
     }
 
     //TODO: Dont work with override functions from another file

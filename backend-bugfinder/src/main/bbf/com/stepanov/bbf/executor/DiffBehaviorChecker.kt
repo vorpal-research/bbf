@@ -21,7 +21,7 @@ class DiffBehaviorChecker(private val compilers: List<CommonCompiler>) : MultiCo
         return results
     }
 
-    private fun isSameDiffBehavior(text: String, pathToFile: String): Boolean {
+    private fun isSameDiffBehavior(text: String): Boolean {
         val psiFile = psiFactory.createFile(text)
         if (!compilers.checkCompilingForAllBackends(psiFile)) {
             log.debug("Cannot compile with main")
@@ -45,7 +45,7 @@ class DiffBehaviorChecker(private val compilers: List<CommonCompiler>) : MultiCo
         }
         val set = results.map { it.second }.toSet()
         val res = results.size == set.size
-        log.debug("Result = ${res}")
+        log.debug("Result = $res")
         if (!res) {
             for ((ind, b) in backup.withIndex()) {
                 prevResults[ind] = b
@@ -61,7 +61,7 @@ class DiffBehaviorChecker(private val compilers: List<CommonCompiler>) : MultiCo
         var writer = File(pathToFile).bufferedWriter()
         writer.write(text)
         writer.close()
-        val res = isSameDiffBehavior(text, pathToFile)
+        val res = isSameDiffBehavior(text)
         writer = File(pathToFile).bufferedWriter()
         writer.write(oldText)
         writer.close()
@@ -71,7 +71,7 @@ class DiffBehaviorChecker(private val compilers: List<CommonCompiler>) : MultiCo
 
     override fun init(compilingPath: String, psiFactory: KtPsiFactory?): Error {
         val results = compileAndGetExecResult()
-        results.forEachIndexed { index, pair -> prevResults.add(pair.second.split("\n").filter { it.isNotEmpty() }) }
+        results.forEachIndexed { _, pair -> prevResults.add(pair.second.split("\n").filter { it.isNotEmpty() }) }
         return Error("")
     }
 

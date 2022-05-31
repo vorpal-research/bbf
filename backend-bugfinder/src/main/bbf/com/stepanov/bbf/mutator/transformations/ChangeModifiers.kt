@@ -57,5 +57,7 @@ class ChangeModifiers : Transformation() {
     private val possibleFunctionModifiers = listOf("tailrec", "operator", "infix", "external", "lateinit",
             "override", "open", "final", "abstract", "private", "public", "protected", "internal", "const")
 
-    val RANDOM_CONST = 5
+    private companion object {
+        private const val RANDOM_CONST = 5
+    }
 }

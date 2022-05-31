@@ -1,8 +1,7 @@
 package org.jetbrains.kootstrap
 
-import com.intellij.mock.MockProject
+import com.intellij.mock.MockComponentManager
 import com.intellij.openapi.extensions.ExtensionPoint
-import com.intellij.openapi.extensions.Extensions
 import com.intellij.openapi.util.Disposer
 import com.intellij.pom.PomModel
 import com.intellij.pom.PomTransaction
@@ -34,28 +33,17 @@ import java.io.File
  */
 
 object FooBarCompiler {
-
-    init {
-        Extensions.getRootArea().registerExtensionPoint(
-                TreeCopyHandler.EP_NAME.name,
-                TreeCopyHandler::class.java.canonicalName,
-                ExtensionPoint.Kind.INTERFACE
-        )
-    }
-
     fun analyzeBunchOfSources(
             env: KotlinCoreEnvironment,
             files: Collection<KtFile>,
             cfg: CompilerConfiguration
-    ): BindingContext? {
-        return TopDownAnalyzerFacadeForJVM.analyzeFilesWithJavaIntegration(
-                env.project,
-                files,
-                CliBindingTrace(),
-                cfg,
-                { scope -> JvmPackagePartProvider(env.configuration.languageVersionSettings, scope) }
-        ).bindingContext
-    }
+    ): BindingContext = TopDownAnalyzerFacadeForJVM.analyzeFilesWithJavaIntegration(
+            env.project,
+            files,
+            CliBindingTrace(),
+            cfg,
+            { scope -> JvmPackagePartProvider(env.configuration.languageVersionSettings, scope) }
+    ).bindingContext
 
     fun setupMyCfg(cmd: CommandLine): CompilerConfiguration {
 
@@ -92,14 +80,22 @@ object FooBarCompiler {
                 EnvironmentConfigFiles.JVM_CONFIG_FILES
         )
 
+        val project = env.project as MockComponentManager
+
+        env.project.extensionArea.registerExtensionPoint(
+                TreeCopyHandler.EP_NAME.name,
+                TreeCopyHandler::class.java.canonicalName,
+                ExtensionPoint.Kind.INTERFACE
+        )
+
+        project.registerService(TreeAspect::class.java)
+
         class MyPomModelImpl(env: KotlinCoreEnvironment) : PomModelImpl(env.project) {
             override fun runTransaction(pt: PomTransaction) = pt.run()
         }
 
         val pomModel = MyPomModelImpl(env)
-        TreeAspect(pomModel)
 
-        val project = env.project as MockProject
         project.registerService(
                 PomModel::class.java,
                 pomModel

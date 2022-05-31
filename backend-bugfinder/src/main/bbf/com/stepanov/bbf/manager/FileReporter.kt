@@ -24,7 +24,7 @@ object FileReporter : Reporter {
         val newPath =
                 if (resDir.endsWith('/')) "${resDir}diff$type/${Random().getRandomVariableName(7)}.kt"
                 else "${resDir}/diff$type/${Random().getRandomVariableName(7)}.kt"
-        val diffCompilers = "// Different ${type.toLowerCase()} happens on:${bug.compilerVersion}"
+        val diffCompilers = "// Different ${type.lowercase(Locale.getDefault())} happens on:${bug.compilerVersion}"
         File(newPath.substringBeforeLast('/')).mkdirs()
         File(newPath).writeText("$diffCompilers\n${bug.crashingCode}")
     }

@@ -30,8 +30,8 @@ class SimplifyFunAndProp(private val file: KtFile, private val checker: Compiler
         val props = file.getAllPSIChildrenOfType<KtProperty>().toMutableList()
         //Kostyl for property in property
         val propsToRemove = mutableListOf<KtProperty>()
-        props.forEach {
-            it.node.getAllChildrenNodes().find { it.psi is KtProperty }?.let {
+        props.forEach { property ->
+            property.node.getAllChildrenNodes().find { it.psi is KtProperty }?.let {
                 propsToRemove.add(it.psi as KtProperty)
             }
         }

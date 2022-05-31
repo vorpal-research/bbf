@@ -4,9 +4,7 @@ import org.apache.maven.model.Dependency
 import org.apache.maven.model.Model
 import org.apache.maven.model.building.DefaultModelBuilderFactory
 import org.apache.maven.model.building.DefaultModelBuildingRequest
-import org.apache.maven.model.building.ModelProblemCollector
-import org.apache.maven.model.building.ModelProblemCollectorRequest
-import org.apache.maven.model.interpolation.StringSearchModelInterpolator
+import org.apache.maven.model.interpolation.StringVisitorModelInterpolator
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils
 import org.eclipse.aether.RepositorySystem
 import org.eclipse.aether.RepositorySystemSession
@@ -65,17 +63,11 @@ internal val Dependency.asAether: org.eclipse.aether.graph.Dependency
 fun getPomModel(pom: File): Model {
     val pomReq = DefaultModelBuildingRequest().setPomFile(pom)
     val b = DefaultModelBuilderFactory().newInstance()
-    val model = StringSearchModelInterpolator().interpolateModel(
-            b.build(pomReq).rawModel,
-            pom.parentFile,
-            pomReq,
-            object : ModelProblemCollector {
-                override fun add(req: ModelProblemCollectorRequest?) {
-                    // do nothing
-                }
-            }
-    )
-    return model
+    return StringVisitorModelInterpolator().interpolateModel(
+        b.build(pomReq).rawModel,
+        pom.parentFile,
+        pomReq
+    ) { /* do nothing */ }
 }
 
 fun setupFromPom(

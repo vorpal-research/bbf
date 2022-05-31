@@ -5,8 +5,6 @@ import com.stepanov.bbf.util.Stream
 import org.jetbrains.kotlin.cli.common.arguments.K2JSCompilerArguments
 import org.jetbrains.kotlin.cli.js.K2JSCompiler
 import org.jetbrains.kotlin.config.Services
-import com.stepanov.bbf.util.readInputAndErrorStreams
-import com.stepanov.bbf.util.readStream
 import com.stepanov.reduktor.executor.KotlincInvokeStatus
 import com.stepanov.reduktor.util.MsgCollector
 import java.io.*

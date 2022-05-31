@@ -6,7 +6,6 @@
     <artifactId>bcomparatorgui</artifactId>
     <version>1.0</version>
     <name>bcomparatorgui</name>
-    <url>http://maven.apache.org</url>
 
     <parent>
         <groupId>com.stepanov</groupId>
@@ -28,15 +27,11 @@
         <dependency>
             <groupId>com.android.tools.external.com-intellij</groupId>
             <artifactId>intellij-core</artifactId>
-            <version>26.5.0</version>
+            <version>${intellij.core.version}</version>
         </dependency>
     </dependencies>
 
     <repositories>
-        <repository>
-            <id>jcenter</id>
-            <url>https://jcenter.bintray.com/</url>
-        </repository>
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
@@ -47,9 +42,9 @@
             <url>https://dl.google.com/dl/android/maven2</url>
         </repository>
         <repository>
-            <id>bintray-vorpal-research-kotlin-maven</id>
-            <name>vorpal-research-kotlin-maven</name>
-            <url>http://dl.bintray.com/vorpal-research/kotlin-maven</url>
+            <id>gmaven</id>
+            <name>Google Maven</name>
+            <url>https://maven.google.com/</url>
         </repository>
     </repositories>
 
@@ -63,7 +58,7 @@
                 <executions>
                     <execution>
                         <id>compile</id>
-                        <phase>compile</phase>
+                        <phase>process-sources</phase>
                         <goals>
                             <goal>compile</goal>
                         </goals>

@@ -4,15 +4,15 @@ removing a balanced pair of curly braces and all interior text, and removing an 
 1. Remove package
 2. LocalToGlobal ?
 3. ParamToGlobal
-4. Remove an integral/enumeration parameter from the declaration of a function. Define the removed parameter as a local variable of the same function. Initialze the newly local variable to be 0. 
-5. Remove a nested function invocation from its enclosing expression. The transformation will create a temporary variable with the correct type, assgin the return value of the selected nested function to the created variable, and replace the function invocation with this temporary variable.
-6-9. Rename fun, parameters, variables, clasees to increase readability (post)
+4. Remove an integral/enumeration parameter from the declaration of a function. Define the removed parameter as a local variable of the same function. Initialize the newly local variable to be 0.
+5. Remove a nested function invocation from its enclosing expression. The transformation will create a temporary variable with the correct type, assign the return value of the selected nested function to the created variable, and replace the function invocation with this temporary variable.
+6-9. Rename fun, parameters, variables, classes to increase readability (post)
 10. Make a function return a void +
 11. Inliner for simple functions
-12. Copy propagarion for simple assigments
+12. Copy propagation for simple assignments
 13. Replace a call expression with a value or variable which has the same type as CallExpr's type. (pre)
 14. Replace a CallExpr with a return expression from this callee's body (pre)
-15. Simplify Call Expr. Reeplace function arguments with: 0 for integer and a global temp variable for classes
+15. Simplify Call Expr. Replace function arguments with: 0 for integer and a global temp variable for classes
 16. Simplify if-else    +
 
 if (guard1) 
@@ -29,9 +29,9 @@ to
   {...} 
 if there is no else-if left, the last else keyword will be removed.
 17. int[2][3][4] -> int [2][3 * 4] -> int [2][n] -> n - maximum accessing index (to Lists??)
-18. Move function body towards it's declaration ??????????
+18. Move function body towards its declaration ??????????
 19. Remove base class if it has less than 5 declarations. Move declarations into one of it's subclasses
-20. Replace Derdived class with one of it's base classes if the derived class is empty
+20. Replace derived class with one of it's base classes if the derived class is empty
 21. Remove ctor initializer
 22. Simplify nested class if ...
 23. Remove unused outer class

@@ -33,7 +33,7 @@ class PreliminarySimplification(private val ktFile: KtFile, private val projPath
                 if (f == ktFile)
                     continue
                 kotFile.beforeAstChange()
-                if (kotFile.importDirectives.any { it -> fileImports.any { it1 -> it.text == it1.text } }
+                if (kotFile.importDirectives.any { fileImports.any { it1 -> it.text == it1.text } }
                         && !importsMap.containsKey(f)) {
                     importsMap[f] = level
                 }

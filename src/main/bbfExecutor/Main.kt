@@ -3,6 +3,7 @@ package com.stepanov.bbfexecutor
 import org.apache.commons.exec.*
 import java.io.File
 import java.util.*
+import kotlin.system.exitProcess
 
 const val PATH_TO_JAR = "java -jar backend-bugfinder/target/backendBugFinder-1.0-jar-with-dependencies.jar"
 val TIMEOUT_SEC = Properties()
@@ -75,7 +76,7 @@ fun main(args: Array<String>) {
         }
     } else {
         while (true) {
-            if (handler.hasResult()) System.exit(0)
+            if (handler.hasResult()) exitProcess(0)
         }
     }
 }

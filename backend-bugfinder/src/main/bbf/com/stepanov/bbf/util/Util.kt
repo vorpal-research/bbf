@@ -20,28 +20,9 @@ enum class Stream {
     INPUT, ERROR, BOTH
 }
 
-fun Process.readStream(type: Stream): String {
-    val res = StringBuilder()
-    val reader = when (type) {
-        Stream.INPUT -> BufferedReader(InputStreamReader(this.inputStream))
-        Stream.ERROR -> BufferedReader(InputStreamReader(this.errorStream))
-        else -> BufferedReader(InputStreamReader(SequenceInputStream(this.inputStream, this.errorStream)))
-    }
-    if (!reader.ready()) return ""
-    var line: String? = reader.readLine()
-    while (line != null) {
-        res.append("$line\n")
-        line = reader.readLine()
-    }
-    reader.close()
-    return res.toString()
-}
-
-fun Process.readInputAndErrorStreams(): String = readStream(Stream.INPUT) + readStream(Stream.ERROR)
-
 fun KtExpression.getType(ctx: BindingContext): KotlinType? {
-    val typesOfExpressions = this.getAllPSIChildrenOfType<KtExpression>().map { ctx.getType(it) }.filterNotNull()
-    val typeReferences = this.getAllPSIChildrenOfType<KtTypeReference>().map { it.getAbbreviatedTypeOrType(ctx) }.filterNotNull()
+    val typesOfExpressions = this.getAllPSIChildrenOfType<KtExpression>().mapNotNull { ctx.getType(it) }
+    val typeReferences = this.getAllPSIChildrenOfType<KtTypeReference>().mapNotNull { it.getAbbreviatedTypeOrType(ctx) }
     return when {
         typesOfExpressions.isNotEmpty() -> typesOfExpressions.first()
         typeReferences.isNotEmpty() -> typeReferences.first()

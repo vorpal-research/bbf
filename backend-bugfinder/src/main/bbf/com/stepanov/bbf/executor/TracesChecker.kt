@@ -1,17 +1,10 @@
 package com.stepanov.bbf.executor
 
-import com.intellij.lang.ASTNode
-import com.intellij.lang.FileASTNode
 import com.intellij.psi.PsiErrorElement
-import com.stepanov.reduktor.util.getAllChildrenNodes
 import com.stepanov.bbf.mutator.transformations.Transformation
 import com.stepanov.bbf.util.checkCompilingForAllBackends
+import com.stepanov.reduktor.util.getAllChildrenNodes
 import org.apache.log4j.Logger
-import org.jetbrains.kotlin.psi.KtFile
-import org.jetbrains.kotlin.psi.KtPsiFactory
-import com.stepanov.bbf.util.getAllParentsWithoutNode
-import com.stepanov.reduktor.executor.CompilerTestChecker
-import com.stepanov.reduktor.executor.error.Error
 import java.io.BufferedWriter
 import java.io.File
 import java.io.FileWriter

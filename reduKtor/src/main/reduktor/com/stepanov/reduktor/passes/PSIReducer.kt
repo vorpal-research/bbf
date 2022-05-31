@@ -26,7 +26,7 @@ class PSIReducer(private val file: KtFile, private val checker: CompilerTestChec
             level++
             children
                     .asReversed()
-                    .forEach { tokens.put(it, it.getAllChildrenNodes().size to counter); counter--; /*println("c = $counter")*/ }
+                    .forEach { tokens[it] = it.getAllChildrenNodes().size to counter; counter--; /*println("c = $counter")*/ }
             children = fileNode.getAllChildrenOfTheLevel(level)
 
         }
@@ -40,14 +40,14 @@ class PSIReducer(private val file: KtFile, private val checker: CompilerTestChec
             if (token.key.getAllParentsWithoutNode().size == 0)
                 tokensWithParentBFSOrder[token.key] = Triple(token.value.first, Integer.MAX_VALUE, token.value.second)
             else
-                tokensWithParentBFSOrder[token.key] = Triple(token.value.first, tokens.get(token.key.treeParent)!!.second, token.value.second)
+                tokensWithParentBFSOrder[token.key] = Triple(token.value.first, tokens[token.key.treeParent]!!.second, token.value.second)
 
         }
         startReduce(fileNode)
     }
 
     private fun startReduce(firstNode: ASTNode) {
-        val queue = PriorityQueue<Pair<ASTNode, Triple<Int, Int, Int>>>(QueueComparator())
+        val queue = PriorityQueue(QueueComparator())
         firstNode.children().forEach { queue.offer(it to tokensWithParentBFSOrder[it]!!) }
         var nodeForHandle = queue.poll().first
         while (queue.isNotEmpty()) {

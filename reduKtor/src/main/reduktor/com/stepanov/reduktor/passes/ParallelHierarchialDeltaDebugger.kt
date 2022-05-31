@@ -1,4 +1,4 @@
-//package com.stepanov.reduktor.passes
+package com.stepanov.reduktor.passes
 //
 //import com.intellij.lang.ASTNode
 //import com.intellij.lang.FileASTNode
@@ -107,8 +107,8 @@
 //        }
 //
 //        private fun deleteNodes(tree: FileASTNode, minconf: List<ASTNode>, level: Int): FileASTNode {
-//            val childs = tree.getAllChildrenOfTheLevel(level)
-//            childs
+//            val children = tree.getAllChildrenOfTheLevel(level)
+//            children
 //                    .filter { !minconf.contains(it) && it !is PsiWhiteSpace }
 //                    .forEach { checker.removeNodeIfPossible(tree, it); }
 //            return tree
@@ -127,13 +127,13 @@
 //
 //        private fun getCopyWithDeletingNodes(matchingNodes: Boolean, minconf: List<ASTNode>, nodes: List<ASTNode>): FileASTNode {
 //            val copyTree = tree.copyElement() as FileASTNode
-//            val childs = copyTree.getAllChildrenOfTheLevel(level)
+//            val children = copyTree.getAllChildrenOfTheLevel(level)
 //            if (matchingNodes) {
-//                childs
+//                children
 //                        .filterNot { containsAstNodeText(minconf, it) || it is PsiWhiteSpace || !containsAstNodeText(nodes, it) }
 //                        .forEach { copyTree.removeChild(it) }
 //            } else {
-//                childs
+//                children
 //                        .filterNot { !containsAstNodeText(minconf, it) || it is PsiWhiteSpace || !containsAstNodeText(nodes, it) }
 //                        .forEach { copyTree.removeChild(it) }
 //            }

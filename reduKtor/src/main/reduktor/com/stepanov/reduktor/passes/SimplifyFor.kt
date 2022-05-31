@@ -5,9 +5,11 @@ import com.stepanov.reduktor.util.getAllPSIChildrenOfType
 import com.stepanov.reduktor.util.replaceThis
 import org.apache.log4j.Logger
 import org.jetbrains.kotlin.lexer.KtTokens
-import org.jetbrains.kotlin.psi.*
+import org.jetbrains.kotlin.psi.KtElement
+import org.jetbrains.kotlin.psi.KtFile
+import org.jetbrains.kotlin.psi.KtForExpression
+import org.jetbrains.kotlin.psi.KtPsiFactory
 import org.jetbrains.kotlin.psi.psiUtil.allChildren
-
 
 class SimplifyFor(private val file: KtFile, private val checker: CompilerTestChecker) {
 
@@ -16,7 +18,7 @@ class SimplifyFor(private val file: KtFile, private val checker: CompilerTestChe
         for (f in forExpressions) {
             if (f.loopParameter == null || f.loopRange == null || f.body == null) continue
             val oldFor = f.copy() as KtForExpression
-            val newProp = try {
+            val newProp: KtElement = try {
                 if (f.destructuringDeclaration != null) {
                     psiFactory.createDestructuringDeclaration("val ${f.loopParameter!!.text} = (${f.loopRange!!.text}).iterator().next()")
                 } else {

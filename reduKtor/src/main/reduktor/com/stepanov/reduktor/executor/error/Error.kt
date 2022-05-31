@@ -27,8 +27,8 @@ data class Error(val errorMessage: String) {
                 if (pathToFile.isEmpty())
                     pathToFile = errorSubstr.substring(errorSubstr.indexOf("in ") + 3, errorSubstr.length - 1)
             }
-        } else if (errorMessage.contains(ErrorConstants.illegalStateError)) {
-            type = ErrorType.ILLEGALSTATE
+        } else if (errorMessage.contains(ErrorConstants.illegalStateException)) {
+            type = ErrorType.ILLEGAL_STATE
             parseLocation(errorMessage)
         } else if (errorMessage.contains(ErrorConstants.runtimeException)) {
             type = ErrorType.UNKNOWN
@@ -67,5 +67,5 @@ data class Error(val errorMessage: String) {
 }
 
 enum class ErrorType {
-    CODEGEN, ANALYSIS, ILLEGALSTATE, EXCEPTION, UNKNOWN
+    CODEGEN, ANALYSIS, ILLEGAL_STATE, EXCEPTION, UNKNOWN
 }

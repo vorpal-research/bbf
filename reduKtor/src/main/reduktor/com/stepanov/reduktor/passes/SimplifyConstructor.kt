@@ -10,52 +10,52 @@ import org.jetbrains.kotlin.psi.psiUtil.getCallNameExpression
 
 class SimplifyConstructor(private val file: KtFile, private val checker: CompilerTestChecker) {
 
-    //TODO handle labmdas
+    //TODO handle lambdas
     fun transform() {
         file.getAllPSIChildrenOfType<KtClass>()
                 .filter { it.name != null && it.primaryConstructor != null }
                 //Filter constructors with lambdas
                 .filter { it.primaryConstructor!!.getAllPSIChildrenOfType<KtFunctionType>().isEmpty() }
-                .forEach {
+                .forEach { ktClass ->
                     //Get all invocations
-                    val invocations = file.getAllPSIChildrenOfType<KtCallExpression>()
+                    val invocations: MutableList<KtCallElement> = file.getAllPSIChildrenOfType<KtCallExpression>()
+                            .asSequence()
                             .filter { call -> call.getCallNameExpression() != null }
-                            .filter { call -> call.getCallNameExpression()!!.textMatches(it.name!!) }
+                            .filter { call -> call.getCallNameExpression()!!.textMatches(ktClass.name!!) }
                             .filter { call ->
-                                call.valueArguments.size == it.primaryConstructorParameters.size
-                                        && it.primaryConstructorParameters.isNotEmpty()
+                                call.valueArguments.size == ktClass.primaryConstructorParameters.size
+                                        && ktClass.primaryConstructorParameters.isNotEmpty()
                             }
-                            .map { it as KtCallElement }
                             .toMutableList()
                     val callees = file.getAllPSIChildrenOfType<KtSuperTypeCallEntry>()
                             .filter { call -> call.getCallNameExpression() != null }
-                            .filter { call -> call.getCallNameExpression()!!.textMatches(it.name!!) }
+                            .filter { call -> call.getCallNameExpression()!!.textMatches(ktClass.name!!) }
                             .filter { call ->
-                                call.valueArguments.size == it.primaryConstructorParameters.size
-                                        && it.primaryConstructorParameters.isNotEmpty()
+                                call.valueArguments.size == ktClass.primaryConstructorParameters.size
+                                        && ktClass.primaryConstructorParameters.isNotEmpty()
                             }
                     callees.forEach { invocations.add(it) }
                     var primaryConstructor: List<PsiElement>
-                    var valueParameters = it.primaryConstructorParameters
+                    var valueParameters = ktClass.primaryConstructorParameters
                     if (valueParameters.isEmpty()) return@forEach
                     var i = 0
                     while (i < valueParameters.size - 1) {
-                        primaryConstructor = it.primaryConstructor?.allChildren?.first { it is KtParameterList }?.allChildren?.toList()
+                        primaryConstructor = ktClass.primaryConstructor?.allChildren?.first { it is KtParameterList }?.allChildren?.toList()
                                 ?: return@forEach
-                        valueParameters = it.primaryConstructorParameters
+                        valueParameters = ktClass.primaryConstructorParameters
                         if (valueParameters.size <= 1) return@forEach
 
                         val v = valueParameters[i]
                         val next = valueParameters[i + 1]
                         var fl = false
-                        val oldCopy = it.primaryConstructor!!.copy() as KtPrimaryConstructor
-                        primaryConstructor.forEach {
-                            if (it == v)
+                        val oldCopy = ktClass.primaryConstructor!!.copy() as KtPrimaryConstructor
+                        primaryConstructor.forEach { element ->
+                            if (element == v)
                                 fl = true
-                            if (it == next)
+                            if (element == next)
                                 fl = false
                             if (fl) {
-                                file.node.removeChild(it.node)
+                                file.node.removeChild(element.node)
                             }
                         }
                         //Remove from invocations
@@ -65,7 +65,7 @@ class SimplifyConstructor(private val file: KtFile, private val checker: Compile
                             it.valueArgumentList?.removeArgument(i)
                         }
                         if (!checker.checkTest(file.text)) {
-                            it.primaryConstructor!!.replaceThis(oldCopy)
+                            ktClass.primaryConstructor!!.replaceThis(oldCopy)
                             for (j in 0 until invocations.size) {
                                 val newArg = KtPsiFactory(file.project).createArgument(oldArgsCopies[j].text)
                                 val invoke = invocations[j]
@@ -74,14 +74,14 @@ class SimplifyConstructor(private val file: KtFile, private val checker: Compile
                             valueParameters = oldCopy.valueParameters
                             ++i
                         } else {
-                            valueParameters = it.primaryConstructorParameters
+                            valueParameters = ktClass.primaryConstructorParameters
                         }
                     }
                     //Process last element
-                    primaryConstructor = it.primaryConstructor?.allChildren?.first?.allChildren?.toList()!!
-                    val lastParam = it.primaryConstructorParameters.last()
+                    primaryConstructor = ktClass.primaryConstructor?.allChildren?.first?.allChildren?.toList()!!
+                    val lastParam = ktClass.primaryConstructorParameters.last()
                     val lastArgs = invocations.map { it.valueArguments.last() }
-                    val constructorCopy = it.primaryConstructor!!.copy() as KtPrimaryConstructor
+                    val constructorCopy = ktClass.primaryConstructor!!.copy() as KtPrimaryConstructor
                     var prevComma: PsiElement? = null
                     primaryConstructor.forEach {
                         if (it == lastParam) {
@@ -94,7 +94,7 @@ class SimplifyConstructor(private val file: KtFile, private val checker: Compile
                         it.valueArgumentList?.removeArgument(it.valueArguments.size - 1)
                     }
                     if (!checker.checkTest(file.text)) {
-                        it.primaryConstructor?.replaceThis(constructorCopy)
+                        ktClass.primaryConstructor?.replaceThis(constructorCopy)
                         for (j in 0 until invocations.size) {
                             val newArg = KtPsiFactory(file.project).createArgument(lastArgs[j].text)
                             invocations[j].valueArgumentList!!.addArgument(newArg)
@@ -106,4 +106,3 @@ class SimplifyConstructor(private val file: KtFile, private val checker: Compile
 
 private val ValueArgument.text: String
     get() = this.asElement().text
-

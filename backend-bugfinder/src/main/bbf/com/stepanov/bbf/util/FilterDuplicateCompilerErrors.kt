@@ -6,7 +6,7 @@ import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch
 import java.io.File
 
 //TODO need to be rewrited
-object FilterDuplcatesCompilerErrors {
+object FilterDuplicateCompilerErrors {
 
     fun filter(files: List<File>, comp: CommonCompiler) {
         val errorMessages = mutableMapOf<File, String>()
@@ -120,8 +120,7 @@ object FilterDuplcatesCompilerErrors {
         val firstIndex = msg.indexOf("\nThe root cause was thrown at:")
         val lastIndex = msg.indexOf("Caused by:", firstIndex)
         if (firstIndex == -1 || lastIndex == -1) return ""
-        val res = msg.substring(firstIndex, lastIndex)
-        return res
+        return msg.substring(firstIndex, lastIndex)
     }
 
     private fun getStacktrace2(msg: String): String =

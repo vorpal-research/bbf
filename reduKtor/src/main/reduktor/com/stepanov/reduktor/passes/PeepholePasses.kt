@@ -32,24 +32,24 @@ class PeepholePasses(private val text: String, private val checker: CompilerTest
         res = deleteBetweenSym(res, '.')
         res = deleteBetweenSym(res, ',')
 
-        val occurrencesStr = TreeMap<IntRange, Map.Entry<Regex, String>>(Comparator<IntRange> { o1, o2 -> o1.start.compareTo(o2.start) })
+        val occurrencesStr = TreeMap<IntRange, Map.Entry<Regex, String>> { o1, o2 -> o1.first.compareTo(o2.first) }
         for (reg in PeepholeRegexes.del_regexes) {
             for (oc in reg.component1().findAll(res).toList()) {
-                occurrencesStr.put(oc.range, reg)
+                occurrencesStr[oc.range] = reg
             }
         }
         for (reg in PeepholeRegexes.regexes) {
             for (oc in reg.component1().findAll(res).toList()) {
-                occurrencesStr.put(oc.range, reg)
+                occurrencesStr[oc.range] = reg
             }
         }
         res = replaceOccurrences(res, occurrencesStr) { entry: Map.Entry<Regex, String>, _, _ -> entry.component2() }
 
 
-        val occurrences = TreeMap<IntRange, Map.Entry<Regex, Regex>>(Comparator<IntRange> { o1, o2 -> o1.start.compareTo(o2.start) })
+        val occurrences = TreeMap<IntRange, Map.Entry<Regex, Regex>> { o1, o2 -> o1.first.compareTo(o2.first) }
         for (reg in PeepholeRegexes.reg_toReg) {
             for (oc in reg.component1().findAll(res).toList()) {
-                occurrences.put(oc.range, reg)
+                occurrences[oc.range] = reg
             }
         }
         res = replaceOccurrences(res, occurrences) { entry: Map.Entry<Regex, Regex>, intRange: IntRange, curRes: String ->
@@ -63,7 +63,7 @@ class PeepholePasses(private val text: String, private val checker: CompilerTest
         var diff = 0
         var res = text
         for (oc in occurrences) {
-            val newRange = IntRange(oc.key.start - diff, oc.key.endInclusive - diff)
+            val newRange = IntRange(oc.key.first - diff, oc.key.last - diff)
             val replacement = replacementFun.invoke(oc.value, newRange, res)
             val replaced = res.replaceRange(newRange, replacement)
             if (checker.checkTest(replaced)) {
@@ -83,10 +83,10 @@ class PeepholePasses(private val text: String, private val checker: CompilerTest
             } else if (ch == p.closing && stack.isNotEmpty()) {
                 val openInd = stack.pop()
                 if (n-- == 0)
-                    if (onlyParentheses) {
-                        return text.removeRange(openInd, openInd + 1).removeRange(i - 1, i)
+                    return if (onlyParentheses) {
+                        text.removeRange(openInd, openInd + 1).removeRange(i - 1, i)
                     } else
-                        return text.removeRange(openInd + 1, i)
+                        text.removeRange(openInd + 1, i)
             }
         }
         return ""

@@ -103,16 +103,16 @@ private class ParallelFuncSimplifier(private val fileToReduce: KtFile, val path:
         checker.refreshAlreadyCheckedConfigurations()
         checker.pathToFile = fileToReduce.name
         log.debug("ERROR = ${checker.getErrorInfo()}")
-        val allFuncs = fileToReduce.getAllPSIChildrenOfType<KtNamedFunction>()
-        val funcCopies = allFuncs.map { it.copy() }
-        allFuncs
+        val allFunctions = fileToReduce.getAllPSIChildrenOfType<KtNamedFunction>()
+        val funcCopies = allFunctions.map { it.copy() }
+        allFunctions
                 .sortedByDescending { it.textLength }
                 .filter { it.hasBlockBody() }
                 .forEach { it.initBodyByTODO(KtPsiFactory(fileToReduce.project)) }
         val res = checker.checkTest(fileToReduce.text, fileToReduce.name)
         log.debug("RES = $res")
         if (!res) {
-            for ((i, func) in allFuncs.withIndex()) {
+            for ((i, func) in allFunctions.withIndex()) {
                 func.replaceThis(funcCopies[i])
             }
         }

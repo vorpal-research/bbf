@@ -13,12 +13,12 @@ open class DependencyTree<T> {
     }
 
     fun getOrAddNode(typeNode: T): TreeNode<T> {
-        if (contains(typeNode)) {
-            return nodes.find { it.typeNode == typeNode }!!
+        return if (contains(typeNode)) {
+            nodes.find { it.typeNode == typeNode }!!
         } else {
-            val node = TreeNode<T>(typeNode)
+            val node = TreeNode(typeNode)
             nodes.add(node)
-            return node
+            node
         }
     }
 

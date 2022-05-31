@@ -21,9 +21,9 @@ class ClassDependencyTree : DependencyTree<KtClass>() {
                 getOrAddNode(c)
                 continue
             }
-            c.superTypeListEntries.forEach {
+            c.superTypeListEntries.forEach { entry ->
                 //Try to find in imports
-                var name = it.getAllPSIChildrenOfType<KtTypeReference>().first().text
+                var name = entry.getAllPSIChildrenOfType<KtTypeReference>().first().text
                 val inImport = classFile.importDirectives.find { import -> import.importedFqName?.shortName()?.asString() == name }
                 if (inImport != null) {
                     name = inImport.importPath?.pathStr
@@ -36,9 +36,8 @@ class ClassDependencyTree : DependencyTree<KtClass>() {
                                 .filter { it.psi is KtClass }
                                 .map { it.psi as KtClass }
                                 .asReversed()
+                                .filterNot { it.name == name }
                                 .forEach {
-                                    if (it.name == name)
-                                        return@forEach
                                     fullName += it.name + "."
                                 }
                         fullName += name

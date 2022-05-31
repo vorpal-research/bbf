@@ -9,7 +9,7 @@ class ReplaceBlockExpressionToBody(private val file: KtFile, private val checker
 
     fun transform() {
         val blocks = file.getAllPSIChildrenOfType<KtBlockExpression>()
-        val parents = blocks.map { it.parents.filter { it::class in avExpressions }.toList() }
+        val parents = blocks.map { it.parents.filter { parent -> parent::class in avExpressions }.toList() }
         val bodies = blocks.map { it.copy() as KtBlockExpression }
         for (body in bodies) {
             if (body.lBrace != null)
@@ -17,7 +17,7 @@ class ReplaceBlockExpressionToBody(private val file: KtFile, private val checker
             if (body.rBrace != null)
                 body.removeChild(body.rBrace!!.node)
         }
-        for (i in 0 until blocks.size) {
+        for (i in blocks.indices) {
             for (par in parents[i]) {
                 if (checker.replaceNodeIfPossible(file, par, bodies[i]))
                     break

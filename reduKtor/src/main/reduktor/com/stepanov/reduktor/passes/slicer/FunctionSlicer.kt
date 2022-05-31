@@ -10,8 +10,7 @@ import org.jetbrains.kotlin.psi.*
 
 //TODO Globals?
 class FunctionSlicer(private val checker: CompilerTestChecker) : KtVisitorVoid() {
-
-    fun computeSlice(file: KtFile, func: KtNamedFunction) {
+   fun computeSlice(file: KtFile, func: KtNamedFunction) {
         val functions: List<KtNamedFunction> = file.node.getAllChildrenNodes()
                 .filter { it.psi is KtNamedFunction }
                 .map { it.psi as KtNamedFunction }
@@ -25,7 +24,7 @@ class FunctionSlicer(private val checker: CompilerTestChecker) : KtVisitorVoid()
                     prohibitedKeys.add(sig)
                     signatureToFuncNode.remove(sig)
                 } else {
-                    signatureToFuncNode.put(sig, f)
+                    signatureToFuncNode[sig] = f
                 }
             }
         }

@@ -1,6 +1,5 @@
 package com.stepanov.bbf.executor
 
-import com.stepanov.reduktor.executor.CompilerArgs
 import java.io.File
 import java.util.*
 
@@ -18,8 +17,7 @@ object CompilerArgs {
         val props = Properties()
         props.load(file.inputStream())
         val prop = props.getProperty(name) ?: throw IllegalArgumentException("Cannot init $name property")
-        val res = prop.drop(1).dropLast(1)
-        return res
+        return prop.drop(1).dropLast(1)
     }
 
     fun getPropAsBoolean(name: String): Boolean = getPropValue(name)?.toBoolean()
@@ -49,7 +47,7 @@ object CompilerArgs {
     val shouldFilterDuplicateCompilerBugs = getPropAsBoolean("FILTER_DUPLICATES")
 
     //JAVA
-    val jdkHome = System.getenv("JAVA_HOME")
-    val jvmTarget = "1.8"
-    val classpath = ""
+    val jdkHome: String? = System.getenv("JAVA_HOME")
+    const val jvmTarget = "1.8"
+    const val classpath = ""
 }

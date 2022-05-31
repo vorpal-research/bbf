@@ -15,26 +15,27 @@ class AddPossibleModifiers : Transformation() {
     override fun transform() {
         val values = file.node.getAllChildrenNodes()
                 .asSequence()
-                .filter { it.elementType == KtNodeTypes.CLASS || it.elementType == KtNodeTypes.PROPERTY
-                        || it.elementType == KtNodeTypes.FUN }
+                .filter {
+                    it.elementType == KtNodeTypes.CLASS || it.elementType == KtNodeTypes.PROPERTY
+                            || it.elementType == KtNodeTypes.FUN
+                }
                 .filter { getRandomBoolean(4) }
                 .toList()
         for (i in 0..randomConstant) {
-            values.forEach {
-                val curWorkingList =
-                    when (it.elementType) {
-                        KtNodeTypes.CLASS -> possibleClassModifiers
-                        KtNodeTypes.PROPERTY -> possiblePropertyModifiers
-                        else -> possibleFunctionModifiers
-                    }
-                val el =
-                    when (it.elementType) {
-                        KtNodeTypes.CLASS -> it.psi as KtClass
-                        KtNodeTypes.PROPERTY -> it.psi as KtProperty
-                        else -> it.psi as KtFunction
-                    }
+            values.forEach { node ->
+                val curWorkingList = when (node.elementType) {
+                    KtNodeTypes.CLASS -> possibleClassModifiers
+                    KtNodeTypes.PROPERTY -> possiblePropertyModifiers
+                    else -> possibleFunctionModifiers
+                }
+                val el = when (node.elementType) {
+                    KtNodeTypes.CLASS -> node.psi as KtClass
+                    KtNodeTypes.PROPERTY -> node.psi as KtProperty
+                    else -> node.psi as KtFunction
+                }
                 val num = Random().nextInt(curWorkingList.size)
-                val keyword = KtTokens.MODIFIER_KEYWORDS_ARRAY.find { it.value == curWorkingList[num] } ?: return@forEach
+                val keyword = KtTokens.MODIFIER_KEYWORDS_ARRAY.find { it.value == curWorkingList[num] }
+                        ?: return@forEach
                 el.addModifier(keyword)
                 if (!MutationChecker.checkCompiling(file))
                     el.removeModifier(keyword)

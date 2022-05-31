@@ -18,7 +18,7 @@ class SimplifyWhen(private val file: KtFile, private val checker: CompilerTestCh
             if (whenToDepth.containsKey(depth))
                 whenToDepth[depth]?.add(whenExp)
             else
-                whenToDepth.put(depth, arrayListOf(whenExp))
+                whenToDepth[depth] = arrayListOf(whenExp)
         }
         for (listOfWhenExp in whenToDepth.values) {
             for (whenExp in listOfWhenExp) {

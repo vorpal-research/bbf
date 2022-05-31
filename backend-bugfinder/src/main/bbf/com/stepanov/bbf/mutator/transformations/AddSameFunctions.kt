@@ -7,6 +7,7 @@ import org.jetbrains.kotlin.psi.KtNamedFunction
 import org.jetbrains.kotlin.psi.KtParameter
 import org.jetbrains.kotlin.resolve.BindingContext
 import java.util.*
+import kotlin.math.roundToLong
 
 class AddSameFunctions(private val ctx: BindingContext) : Transformation() {
 
@@ -62,7 +63,7 @@ class AddSameFunctions(private val ctx: BindingContext) : Transformation() {
             repeat(res.count { it == '<' }) { resType.append('>') }
         } else {
             val container = containers[Random().nextInt(containers.size)]
-            val newProb = Math.round(primitiveProb * 1.25).toInt()
+            val newProb = (primitiveProb * 1.25).roundToLong().toInt()
             if (container.second == 2) {
                 val first = generateRandomType(newProb)
                 val second = generateRandomType(newProb)

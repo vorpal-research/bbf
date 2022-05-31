@@ -8,6 +8,6 @@ object CompilerArgs {
     var pathToFileWithBug = ""
     var isProject = false
     var isCompilerError = true
-    val pathToReduKtor = "reduKtor"
-    val pathToJsKotlinLib = "lib/"
+    const val pathToReduKtor = "reduKtor"
+    const val pathToJsKotlinLib = "lib/"
 }

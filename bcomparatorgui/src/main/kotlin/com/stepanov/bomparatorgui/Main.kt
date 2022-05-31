@@ -1,20 +1,14 @@
 package com.stepanov.bomparatorgui
 
 import com.stepanov.bbf.executor.CommonCompiler
-import com.stepanov.bbf.executor.TracesChecker
 import com.stepanov.bbf.executor.compilers.JSCompiler
 import com.stepanov.bbf.executor.compilers.JVMCompiler
-import com.stepanov.bbf.mutator.transformations.Transformation
 import com.stepanov.bbf.util.BBFProperties
-import com.stepanov.reduktor.parser.PSICreator
 import javafx.application.Application
 import javafx.collections.FXCollections
-import javafx.collections.ObservableArray
-import javafx.collections.ObservableList
 import javafx.fxml.FXML
 import javafx.fxml.FXMLLoader.load
 import javafx.fxml.Initializable
-import javafx.scene.Parent
 import javafx.scene.Scene
 import javafx.scene.control.*
 import javafx.scene.paint.Color
@@ -22,13 +16,13 @@ import javafx.scene.text.Text
 import javafx.scene.text.TextFlow
 import javafx.stage.Stage
 import org.bitbucket.cowwoc.diffmatchpatch.DiffMatchPatch
-import java.io.File
 import java.net.URL
 import java.util.*
+import kotlin.system.exitProcess
 
 class Main : Application(), Initializable {
 
-    val layout = "main.fxml"
+    private val layout = "main.fxml"
 
     @FXML
     lateinit var scrollPane1: ScrollPane
@@ -64,7 +58,7 @@ class Main : Application(), Initializable {
     lateinit var rbut2: RadioButton
 
     val group = ToggleGroup()
-    val compilers = mutableListOf<CommonCompiler>()
+    private val compilers = mutableListOf<CommonCompiler>()
 
 
     override fun initialize(location: URL?, resources: ResourceBundle?) {
@@ -82,10 +76,10 @@ class Main : Application(), Initializable {
     }
 
     override fun start(primaryStage: Stage?) {
-        val scene = Scene(load<Parent?>(javaClass.classLoader.getResource(layout)))
+        val scene = Scene(load(javaClass.classLoader.getResource(layout)))
         primaryStage?.scene = scene
         primaryStage?.show()
-        primaryStage?.setOnCloseRequest { System.exit(0) }
+        primaryStage?.setOnCloseRequest { exitProcess(0) }
     }
 
 
@@ -103,14 +97,14 @@ class Main : Application(), Initializable {
         val result = k.first ?: return
         val textsForTextFlow1 = result
                 .filter { it.operation != DiffMatchPatch.Operation.INSERT && it.text.trim() != "\n" }
-                .map { it ->
+                .map {
                     Text(it.text).also { it1 ->
-                        if (it.operation == DiffMatchPatch.Operation.DELETE) it1.fill = Color.BLUE;
+                        if (it.operation == DiffMatchPatch.Operation.DELETE) it1.fill = Color.BLUE
                     }
                 }
         val textsForTextFlow2 = result
                 .filter { it.operation != DiffMatchPatch.Operation.DELETE }
-                .map { it ->
+                .map {
                     Text(it.text).also { it1 -> if (it.operation == DiffMatchPatch.Operation.INSERT) it1.fill = Color.BLUE; it1.wrappingWidthProperty() }
                 }
         val p = TextFlow()
@@ -133,14 +127,14 @@ class Main : Application(), Initializable {
             val result = k.second!!
             textsForTextFlow1 = result
                     .filter { it.operation != DiffMatchPatch.Operation.INSERT && it.text.trim() != "\n" }
-                    .map { it ->
+                    .map {
                         Text(it.text).also { it1 ->
-                            if (it.operation == DiffMatchPatch.Operation.DELETE) it1.fill = Color.BLUE;
+                            if (it.operation == DiffMatchPatch.Operation.DELETE) it1.fill = Color.BLUE
                         }
                     }
             textsForTextFlow2 = result
                     .filter { it.operation != DiffMatchPatch.Operation.DELETE }
-                    .map { it ->
+                    .map {
                         Text(it.text).also { it1 -> if (it.operation == DiffMatchPatch.Operation.INSERT) it1.fill = Color.BLUE; it1.wrappingWidthProperty() }
                     }
         } else {
@@ -164,10 +158,6 @@ class Main : Application(), Initializable {
 
     companion object {
         @JvmStatic
-        fun main(args: Array<String>) {
-            launch(Main::class.java)
-        }
+        fun main(args: Array<String>) = launch(Main::class.java)
     }
 }
-
-

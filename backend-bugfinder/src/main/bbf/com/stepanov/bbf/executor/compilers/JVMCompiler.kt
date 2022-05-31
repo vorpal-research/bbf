@@ -85,12 +85,11 @@ class JVMCompiler(private val arguments: String = "") : CommonCompiler() {
             futureExitCode.cancel(true)
         }
 
-        val status = KotlincInvokeStatus(MsgCollector.crashMessages.joinToString("\n") +
+        return KotlincInvokeStatus(MsgCollector.crashMessages.joinToString("\n") +
                 MsgCollector.compileErrorMessages.joinToString("\n"),
                 !MsgCollector.hasCompileError,
                 MsgCollector.hasException,
                 hasTimeout)
-        return status
     }
 
     override fun exec(path: String, streamType: Stream): String = commonExec("java -jar $path", streamType)

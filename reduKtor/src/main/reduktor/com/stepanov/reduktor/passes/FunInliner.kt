@@ -19,7 +19,7 @@ class FunInliner(private val file: KtFile, private val checker: CompilerTestChec
                 if (calledFunc.size == 1) {
                     val called = calledFunc.first()
                     val lines = called.getAllPSIChildrenOfType<PsiWhiteSpace>()
-                            .fold(0, { acc, next -> acc + next.text.count { it == '\n' } })
+                            .fold(0) { acc, next -> acc + next.text.count { it == '\n' } }
                     if (called != f && lines < 10 && called.valueParameters.size == c.valueArguments.size) {
                         performInlining(c, called)
                     }

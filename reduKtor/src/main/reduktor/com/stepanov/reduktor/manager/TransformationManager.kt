@@ -17,6 +17,7 @@ import org.jetbrains.kotlin.psi.KtPsiFactory
 import org.jetbrains.kotlin.resolve.BindingContext
 import java.io.File
 import java.io.PrintWriter
+import kotlin.system.exitProcess
 
 class TransformationManager(private val ktFiles: List<KtFile>) {
 
@@ -36,7 +37,7 @@ class TransformationManager(private val ktFiles: List<KtFile>) {
         println("error = $errorInfo")
         println("FILE = ${Error.pathToFile}")
         if (errorInfo.type == ErrorType.UNKNOWN)
-            System.exit(0)
+            exitProcess(0)
         var file = targetFiles.find { it.name == Error.pathToFile }!!
         if (file.name == Error.pathToFile) {
             startTasksAndSaveNewFiles(creator.targetFiles, projectDir, TaskType.SIMPLIFYING, backend)
@@ -63,8 +64,8 @@ class TransformationManager(private val ktFiles: List<KtFile>) {
 //            CCTC.reinit()
             //Now transform file with bug
             file = creator.targetFiles.find { it.name == Error.pathToFile }!!
-            val TM = TransformationManager(listOf(file))
-            val res = TM.doTransformationsForFile(file, checker, true, projectDir)
+            val transformationManager = TransformationManager(listOf(file))
+            val res = transformationManager.doTransformationsForFile(file, checker, true, projectDir)
             println("Res = ${res.text}")
         }
         //Saving
@@ -229,8 +230,8 @@ class TransformationManager(private val ktFiles: List<KtFile>) {
                 log.debug("VERIFY FASTREDUCE = ${checker.checkTest(rFile.text)}")
             }
             if (ReduKtorProperties.getPropAsBoolean("HDD") == true) {
-                val HDD = HierarchicalDeltaDebugger(rFile.node, checker)
-                HDD.hdd()
+                val hierarchicalDeltaDebugger = HierarchicalDeltaDebugger(rFile.node, checker)
+                hierarchicalDeltaDebugger.hdd()
                 rFile = KtPsiFactory(rFile.project).createFile(rFile.name, rFile.text)
                 log.debug("CHANGES AFTER HDD ${rFile.text != oldRes}")
                 log.debug("VERIFY HDD = ${checker.checkTest(rFile.text)}")
@@ -292,29 +293,29 @@ class TransformationManager(private val ktFiles: List<KtFile>) {
             file.beforeAstChange()
             val pathToSave = StringBuilder(file.name)
             pathToSave.insert(pathToSave.indexOfLast { it == '/' }, "/minimized")
-            val CCTC = CommonCompilerCrashTestChecker(backend)
+            val ccctc = CommonCompilerCrashTestChecker(backend)
             var rFile = file.copy() as KtFile
-            CCTC.pathToFile = rFile.name
-            log.debug("proj = ${projectDir}")
+            ccctc.pathToFile = rFile.name
+            log.debug("proj = $projectDir")
             if (isProject) {
-                println("PROJ = $projectDir isProj = $isProject File = ${file.name}")
-                CCTC.init(projectDir, ktFactory!!)
+                println("PROJ = $projectDir isProj = true File = ${file.name}")
+                ccctc.init(projectDir, ktFactory!!)
             } else
-                CCTC.init(file.name, ktFactory!!)
-            CCTC.refreshAlreadyCheckedConfigurations()
-            log.debug("ERROR = ${CCTC.getErrorInfo()}")
+                ccctc.init(file.name, ktFactory!!)
+            ccctc.refreshAlreadyCheckedConfigurations()
+            log.debug("ERROR = ${ccctc.getErrorInfo()}")
 //            if (CommonCompilerCrashTestChecker.getErrorInfo().type == ErrorType.UNKNOWN)
 //                continue
-            CCTC.pathToFile = rFile.name
-            SimplifyFunAndProp(rFile, CCTC).transform()
-            val newText = PeepholePasses(rFile.text, CCTC, true).transform()
+            ccctc.pathToFile = rFile.name
+            SimplifyFunAndProp(rFile, ccctc).transform()
+            val newText = PeepholePasses(rFile.text, ccctc, true).transform()
             rFile = KtPsiFactory(rFile.project).createFile(rFile.name, newText)
-            ConstructionsDeleter(rFile, CCTC).transform()
+            ConstructionsDeleter(rFile, ccctc).transform()
             //X3
 //            RemoveParameterFromDeclaration(rFile, CCTC, files).transform()
             //RemoveWhitespaces(rFile, CCTC).transform()
-            RemoveUnusedImports(rFile, CCTC).transform()
-            log.debug("VERIFY = ${CCTC.checkTest(rFile.text, rFile.name)}")
+            RemoveUnusedImports(rFile, ccctc).transform()
+            log.debug("VERIFY = ${ccctc.checkTest(rFile.text, rFile.name)}")
             return rFile
         }
         return null
